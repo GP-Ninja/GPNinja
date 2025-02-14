@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    Alternatively, build your application passing the --base-href parameter
+    specifying the new root path of your web app.
+
+    Fore more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="GP Ninja">
+
+  <!DOCTYPE html>
+<html>
+  <head>
+    <title>GP Ninja</title>
+    <meta name="title" content="GP Ninja" />
+    <meta name="description" content="We take the friction out of Primary and Urgent Care." />
+
+    <!-- Include Firebase SDKs from CDN -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <!-- Include Firebase Functions SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-functions.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBvTTfqwWkUJjyZ7GIveBsIFxwI1tRmsk8",
+        authDomain: "gpninja-1c716.firebaseapp.com",
+        projectId: "gpninja-1c716",
+        storageBucket: "gpninja-1c716.appspot.com",
+        messagingSenderId: "628331694436",
+        appId: "1:628331694436:web:1932f5c0781171c11cd271",
+        measurementId: "G-NRQXHVFS40"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      // Initialize Firestore
+      const db = firebase.firestore();
+
+      // Listen for authentication state changes
+      firebase.auth().onAuthStateChanged(async function(user) {
+        if (user) {
+          console.log('User signed in:', user);
+          try {
+            // Get user details from Firestore
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (!doc.exists) {
+              console.log("No user data found in Firestore.");
+              return;
+            }
+            const userData = doc.data();
+            const userName = userData.display_name || "Anonymous";
+            const userEmail = user.email;
+            const userAvatarURL = userData.avatarURL || null;
+            // Convert creation time to seconds since epoch
+            const userCreatedAt = Math.floor(new Date(user.metadata.creationTime).getTime() / 1000);
+
+            // --- Identity Verification Step ---
+            // Call your Cloud Function (deployed to region 'europe-west2') to generate the HMAC.
+            // Make sure your Cloud Function is configured to use your secret from Secret Manager.
+            const regionFunctions = firebase.app().functions('europe-west2');
+            const generateHmac = regionFunctions.httpsCallable('generateIntercomHmac');
+            const result = await generateHmac({});
+            const userHash = result.data.userHash;
+            console.log("Generated user hash:", userHash);
+
+            // --- Set Up Intercom Settings with Identity Verification ---
+            window.intercomSettings = {
+              api_base: "https://api-iam.intercom.io",
+              app_id: "jonpetzm",
+              user_id: user.uid,
+              name: userName,
+              email: userEmail,
+              created_at: userCreatedAt,
+              user_hash: userHash   // <-- Identity Verification HMAC here!
+            };
+
+            // Initialize Intercom (load the Intercom widget)
+            (function() {
+              var w = window;
+              var ic = w.Intercom;
+              if (typeof ic === "function") {
+                ic('reattach_activator');
+                ic('update', w.intercomSettings);
+              } else {
+                var d = document;
+                var i = function() {
+                  i.c(arguments);
+                };
+                i.q = [];
+                i.c = function(args) {
+                  i.q.push(args);
+                };
+                w.Intercom = i;
+                var l = function() {
+                  var s = d.createElement('script');
+                  s.type = 'text/javascript';
+                  s.async = true;
+                  s.src = 'https://widget.intercom.io/widget/jonpetzm';
+                  var x = d.getElementsByTagName('script')[0];
+                  x.parentNode.insertBefore(s, x);
+                };
+                if (document.readyState === 'complete') {
+                  l();
+                } else if (w.attachEvent) {
+                  w.attachEvent('onload', l);
+                } else {
+                  w.addEventListener('load', l, false);
+                }
+              }
+            })();
+
+            // Initialize Canny (if you are using it)
+            initializeCanny(user.uid, userName, userEmail, userCreatedAt, userAvatarURL);
+          } catch (error) {
+            console.error("Error processing user authentication:", error);
+          }
+        } else {
+          console.log("No user is signed in.");
+          if (window.Intercom) {
+            Intercom('shutdown');
+            console.log("Intercom session has been shut down.");
+          }
+        }
+      });
+
+      // Function to initialize Canny with user data
+      function initializeCanny(userId, userName, userEmail, userCreatedAt, userAvatarURL) {
+        console.log('Initializing Canny with:', userId, userName, userEmail, userCreatedAt, userAvatarURL);
+        let createdDate;
+        if (typeof userCreatedAt === 'number') {
+          createdDate = new Date(userCreatedAt * 1000).toISOString();
+        } else {
+          createdDate = new Date().toISOString(); // Fallback to current date
+        }
+
+        (function(w, d, i, s) {
+          function l() {
+            if (!d.getElementById(i)) {
+              console.log('Loading Canny SDK...');
+              var f = d.getElementsByTagName(s)[0],
+                  e = d.createElement(s);
+              e.type = "text/javascript";
+              e.async = true;
+              e.src = "https://canny.io/sdk.js";
+              f.parentNode.insertBefore(e, f);
+            }
+          }
+          if (typeof w.Canny !== "function") {
+            var c = function() {
+              c.q.push(arguments);
+            };
+            c.q = [];
+            w.Canny = c;
+            if (d.readyState === "complete") l();
+            else if (w.attachEvent) w.attachEvent("onload", l);
+            else w.addEventListener("load", l, false);
+          } else {
+            console.log('Canny SDK already loaded.');
+          }
+        })(window, document, "canny-jssdk", "script");
+
+        if (typeof Canny === "function") {
+          Canny('identify', {
+            appID: '6654a3040a8e721bebde1514',
+            user: {
+              id: userId,
+              name: userName,
+              email: userEmail,
+              avatarURL: userAvatarURL,
+              created: createdDate
+            }
+          });
+          console.log('Canny identify called successfully.');
+        } else {
+          console.log('Canny is not defined yet.');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Your app content -->
+  </body>
+</html>
+
+  
+
+  <!-- Favicon -->
+  <link rel="icon" href="GP_Ninja_(1).png" sizes="any"/>
+  
+
+  <!-- Open Graph & SEO tags -->
+  <meta property="og:title" content="GP Ninja" />
+  <meta property="og:description" content="We take the friction out of Primary and Urgent Care." />
+  <meta property="og:image" content="/assets/assets/images/GP_Ninja_(1).png" /> 
+  <meta name="twitter:title" content="GP Ninja" />
+  <meta name="twitter:description" content="We take the friction out of Primary and Urgent Care." />
+  <meta name="twitter:image" content="/assets/assets/images/GP_Ninja_(1).png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <title> GP Ninja </title>
+  <meta name="description" content="We take the friction out of Primary and Urgent Care." />
+    
+
+  <!-- Status Bar color in Safari browser (iOS) and PWA -->
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f1f4f8">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#121926">
+
+  <link rel="manifest" href="manifest.json">
+  
+</head>
+<body>
+  
+  
+  
+  
+  
+  <script>
+    {{flutter_bootstrap_js}}
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "628331694436",
+    "project_id": "gpninja-1c716",
+    "storage_bucket": "gpninja-1c716.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628331694436:android:eae5ecd262ca5c221cd271",
+        "android_client_info": {
+          "package_name": "com.mycompany.dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628331694436-e765m3li669oj22b53dr9j5ognjpq48d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFBerY2GhK0J__6HppxZYC694U1EaG8jk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628331694436-0v922nqn63j226homrikjav4pqa1v0u4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "628331694436-96q4pgu0lb19od1pedun3obbgha9513q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.dashboardipad"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628331694436:android:688e5f665ee6c19e1cd271",
+        "android_client_info": {
+          "package_name": "com.mycompany.dashboardipad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628331694436-rc80b01v1079418g879944sm06eqar6e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.dashboardipad",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "628331694436-e765m3li669oj22b53dr9j5ognjpq48d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFBerY2GhK0J__6HppxZYC694U1EaG8jk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628331694436-0v922nqn63j226homrikjav4pqa1v0u4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "628331694436-96q4pgu0lb19od1pedun3obbgha9513q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.dashboardipad"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
