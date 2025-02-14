@@ -8,8 +8,10 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/general/horizontal_navbar/horizontal_navbar_widget.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,6 +43,16 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
 
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'a1_clicknote_home'});
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('A1_CLICKNOTE_HOME_a1_clicknote_home_ON_I');
+      logFirebaseEvent('a1_clicknote_home_custom_action');
+      _model.isTablet = await actions.detectDeviceTypeAction();
+      logFirebaseEvent('a1_clicknote_home_update_app_state');
+      FFAppState().isTabletUser = _model.isTablet!;
+      safeSetState(() {});
+    });
+
     _model.switchViewValue = FFAppState().largeTiles;
     _model.textFieldSearchTextController ??= TextEditingController();
     _model.textFieldSearchFocusNode ??= FocusNode();
@@ -766,10 +778,8 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
                                                   final templates =
                                                       containerFlattenedTemplatesRecordList
                                                           .where((e) =>
-                                                              (e.hasTemplateIsAdminOwned() ==
-                                                                  true) &&
-                                                              (e.hasTemplateIsPublished() ==
-                                                                  true))
+                                                              e.hasTemplateIsAdminOwned() ==
+                                                              true)
                                                           .toList();
 
                                                   return GridView.builder(

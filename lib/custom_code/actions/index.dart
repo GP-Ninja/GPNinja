@@ -33,3 +33,4 @@ export 'edit_option_url.dart' show editOptionUrl;
 export 'edit_option_url_prompt.dart' show editOptionUrlPrompt;
 export 'check_if_any_option_has_url.dart' show checkIfAnyOptionHasUrl;
 export 'decode_string_action.dart' show decodeStringAction;
+export 'detect_device_type_action.dart' show detectDeviceTypeAction;

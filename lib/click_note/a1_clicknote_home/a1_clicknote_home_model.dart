@@ -13,6 +13,8 @@ class A1ClicknoteHomeModel extends FlutterFlowModel<A1ClicknoteHomeWidget> {
 
   ///  State fields for stateful widgets in this page.
 
+  // Stores action output result for [Custom Action - detectDeviceTypeAction] action in a1_clicknote_home widget.
+  bool? isTablet;
   // Model for horizontal_navbar component.
   late HorizontalNavbarModel horizontalNavbarModel;
   // State field(s) for MouseRegion widget.

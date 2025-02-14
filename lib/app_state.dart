@@ -875,6 +875,12 @@ class FFAppState extends ChangeNotifier {
     _focusTextfield = value;
   }
 
+  bool _isTabletUser = false;
+  bool get isTabletUser => _isTabletUser;
+  set isTabletUser(bool value) {
+    _isTabletUser = value;
+  }
+
   final _templatesManager =
       StreamRequestManager<List<FlattenedTemplatesRecord>>();
   Stream<List<FlattenedTemplatesRecord>> templates({
