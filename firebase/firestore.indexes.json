@@ -79,29 +79,9 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "template_name",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "flattened_templates",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
           "fieldPath": "template_user",
           "order": "ASCENDING"
         },
-        {
-          "fieldPath": "template_name",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "flattened_templates",
-      "queryScope": "COLLECTION",
-      "fields": [
         {
           "fieldPath": "template_is_community_template",
           "order": "ASCENDING"
