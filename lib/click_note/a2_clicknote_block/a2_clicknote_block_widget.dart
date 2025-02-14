@@ -113,7 +113,7 @@ class _A2ClicknoteBlockWidgetState extends State<A2ClicknoteBlockWidget> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       if (((FFAppState().largeTiles == true) &&
-                              (isiOS == false)) &&
+                              (FFAppState().isTabletUser == false)) &&
                           responsiveVisibility(
                             context: context,
                             phone: false,
