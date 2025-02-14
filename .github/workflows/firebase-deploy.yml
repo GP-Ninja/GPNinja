@@ -146,7 +146,7 @@ jobs:
       - name: Inject custom script
         run: sed -i '/<\/body>/r custom_script.html' build/web/index.html
 
-      # 8. Create firebase.json with performance‑optimized caching & security headers
+      # 8. Create firebase.json with performance‑optimized caching & updated CSP
       - name: Create firebase.json
         run: |
           cat <<EOF > firebase.json
@@ -223,14 +223,16 @@ jobs:
                     {
                       "key": "Content-Security-Policy",
                       "value": "default-src 'self'; \
-                                script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://*.googleapis.com https://*.firebaseapp.com https://*.firebaseio.com https://*.intercom.io https://widget.intercom.io https://js.intercomcdn.com https://canny.io https://js.stripe.com https://accounts.google.com https://apis.google.com https://www.googletagmanager.com; \
+                                script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.gstatic.com https://*.googleapis.com https://*.firebaseapp.com https://*.firebaseio.com https://*.intercom.io https://widget.intercom.io https://js.intercomcdn.com https://canny.io https://js.stripe.com https://accounts.google.com https://apis.google.com https://www.googletagmanager.com; \
                                 connect-src 'self' wss: https://www.gstatic.com https://fonts.gstatic.com https://*.firebaseio.com https://*.intercom.io https://api-iam.intercom.io https://api.canny.io https://canny.io https://api.stripe.com https://api.openai.com https://firebase.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://region1.google-analytics.com https://europe-west2-gpninja-1c716.cloudfunctions.net https://lottie.host https://i.imgur.com; \
                                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
                                 font-src 'self' https://fonts.gstatic.com https://fonts.intercomcdn.com data:; \
                                 img-src 'self' https: data: blob: https://i.imgur.com; \
                                 frame-src 'self' https://*.firebaseapp.com https://js.stripe.com https://hooks.stripe.com https://intercom-sheets.com; \
                                 frame-ancestors 'none'; \
-                                base-uri 'self'"
+                                base-uri 'self'; \
+                                worker-src 'self' blob:; \
+                                manifest-src 'self';"
                     }
                   ]
                 }
