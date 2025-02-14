@@ -189,7 +189,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                                 FlutterFlowTheme.of(context)
                                                     .headlineLargeFamily,
                                             color: FlutterFlowTheme.of(context)
-                                                .alternate,
+                                                .secondary,
                                             letterSpacing: 0.0,
                                             useGoogleFonts: GoogleFonts.asMap()
                                                 .containsKey(
