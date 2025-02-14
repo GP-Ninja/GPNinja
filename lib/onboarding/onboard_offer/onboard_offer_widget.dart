@@ -301,8 +301,9 @@ class _OnboardOfferWidgetState extends State<OnboardOfferWidget> {
                                   customer: valueOrDefault(
                                       currentUserDocument?.stripeCustId, ''),
                                   successUrl:
-                                      'https://gpninja.uk/onboardSubscribeSuccessful',
-                                  cancelUrl: 'https://gpninja.uk/homepage',
+                                      'https://app.gpninja.co.uk/onboardSubscribeSuccessful',
+                                  cancelUrl:
+                                      'https://app.gpninja.co.uk/homepage',
                                   price: 'price_1NeJsAJX5ieXWdT5IFhIMXm4',
                                   hasUsedTrial: false,
                                 );

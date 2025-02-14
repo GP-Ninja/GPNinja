@@ -582,9 +582,9 @@ class _SubscriptionPageWidgetState extends State<SubscriptionPageWidget> {
                                                                 ?.stripeCustId,
                                                             ''),
                                                         successUrl:
-                                                            'https://gpninja.uk/paymentsuccessful',
+                                                            'https://app.gpninja.co.uk/paymentsuccessful',
                                                         cancelUrl:
-                                                            'https://gpninja.uk/homepage',
+                                                            'https://app.gpninja.co.uk/homepage',
                                                         price:
                                                             'price_1NeJsAJX5ieXWdT5IFhIMXm4',
                                                         hasUsedTrial: valueOrDefault<

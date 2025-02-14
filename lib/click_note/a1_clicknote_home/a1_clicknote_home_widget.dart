@@ -1670,7 +1670,7 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
                                                         final comunity =
                                                             containerFlattenedTemplatesRecordList
                                                                 .where((e) =>
-                                                                    e.hasTemplateIsCommunityTemplate() ==
+                                                                    e.templateIsCommunityTemplate ==
                                                                     true)
                                                                 .toList();
 
