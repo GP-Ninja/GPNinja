@@ -14,12 +14,26 @@ import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future<bool> detectDeviceTypeAction() async {
-  // Returns true if running on web and user agent contains "ipad"
   bool isIpad = false;
 
+  // Only do user-agent/platform checks when running on the web
   if (kIsWeb) {
     final userAgent = html.window.navigator.userAgent.toLowerCase();
-    isIpad = userAgent.contains('ipad');
+    final platform = (html.window.navigator.platform ?? '').toLowerCase();
+    final maxTouchPoints = html.window.navigator.maxTouchPoints ?? 0;
+
+    // Typical iPad identification
+    if (userAgent.contains('ipad')) {
+      isIpad = true;
+    }
+    // Some iPads might expose the platform as 'iPad'
+    else if (platform.contains('ipad')) {
+      isIpad = true;
+    }
+    // iPadOS 13+ in Desktop Mode often appears as 'Macintosh' but has multi-touch
+    else if (userAgent.contains('macintosh') && maxTouchPoints > 1) {
+      isIpad = true;
+    }
   }
 
   return isIpad;
