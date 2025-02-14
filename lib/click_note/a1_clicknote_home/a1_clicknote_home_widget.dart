@@ -766,8 +766,10 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
                                                   final templates =
                                                       containerFlattenedTemplatesRecordList
                                                           .where((e) =>
-                                                              e.hasTemplateIsAdminOwned() ==
-                                                              true)
+                                                              (e.hasTemplateIsAdminOwned() ==
+                                                                  true) &&
+                                                              (e.hasTemplateIsPublished() ==
+                                                                  true))
                                                           .toList();
 
                                                   return GridView.builder(
