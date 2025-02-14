@@ -54,6 +54,8 @@ jobs:
                     const userName = userData.display_name || "Anonymous";
                     const userEmail = user.email;
                     const userAvatarURL = userData.avatarURL || null;
+
+                    // Convert creationTime (in ms) to seconds for Intercom & Canny
                     const userCreatedAt = Math.floor(new Date(user.metadata.creationTime).getTime() / 1000);
                     
                     // Intercom: Call cloud function to get identity hash
@@ -116,6 +118,7 @@ jobs:
                             name: userName,
                             email: userEmail,
                             avatarURL: userAvatarURL,
+                            // user.created must be a valid Unix timestamp in seconds
                             created: userCreatedAt
                           }
                         });
@@ -224,7 +227,7 @@ jobs:
                       "key": "Content-Security-Policy",
                       "value": "default-src 'self'; \
                                 script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.gstatic.com https://*.googleapis.com https://*.firebaseapp.com https://*.firebaseio.com https://*.intercom.io https://widget.intercom.io https://js.intercomcdn.com https://canny.io https://js.stripe.com https://accounts.google.com https://apis.google.com https://www.googletagmanager.com; \
-                                connect-src 'self' wss: https://www.gstatic.com https://fonts.gstatic.com https://*.firebaseio.com https://*.intercom.io https://api-iam.intercom.io https://api.canny.io https://canny.io https://api.stripe.com https://api.openai.com https://firebase.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://region1.google-analytics.com https://europe-west2-gpninja-1c716.cloudfunctions.net https://lottie.host https://i.imgur.com; \
+                                connect-src 'self' wss: https://www.gstatic.com https://fonts.gstatic.com https://*.firebaseio.com https://*.intercom.io https://api-iam.intercom.io https://api.canny.io https://canny.io https://api.stripe.com https://api.openai.com https://firebase.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://region1.google-analytics.com https://europe-west2-gpninja-1c716.cloudfunctions.net https://us-central1-gpninja-1c716.cloudfunctions.net https://firebaseinstallations.googleapis.com https://lottie.host https://i.imgur.com; \
                                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
                                 font-src 'self' https://fonts.gstatic.com https://fonts.intercomcdn.com data:; \
                                 img-src 'self' https: data: blob: https://i.imgur.com; \
