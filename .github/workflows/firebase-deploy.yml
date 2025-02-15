@@ -27,7 +27,7 @@ jobs:
       - name: Build Web
         run: flutter build web
 
-      # 5. Remove any meta-based CSP tag from index.html
+      # 5. Remove any meta-based CSP tag from index.html (if FlutterFlow placed one)
       - name: Remove meta CSP
         run: sed -i '/<meta http-equiv="Content-Security-Policy"/d' build/web/index.html
 
@@ -149,7 +149,7 @@ jobs:
       - name: Inject custom script
         run: sed -i '/<\/body>/r custom_script.html' build/web/index.html
 
-      # 8. Create firebase.json with performance‑optimized caching & updated CSP
+      # 8. Create firebase.json with performance‑optimized caching & security headers
       - name: Create firebase.json
         run: |
           cat <<EOF > firebase.json
@@ -236,6 +236,18 @@ jobs:
                                 base-uri 'self'; \
                                 worker-src 'self' blob:; \
                                 manifest-src 'self';"
+                    },
+                    {
+                      "key": "X-Frame-Options",
+                      "value": "DENY"
+                    },
+                    {
+                      "key": "X-Content-Type-Options",
+                      "value": "nosniff"
+                    },
+                    {
+                      "key": "Referrer-Policy",
+                      "value": "strict-origin-when-cross-origin"
                     }
                   ]
                 }
