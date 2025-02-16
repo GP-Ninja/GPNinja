@@ -538,6 +538,17 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
                                                           .whenComplete(() =>
                                                               safeSetState(
                                                                   () {}));
+
+                                                      logFirebaseEvent(
+                                                          'TextFieldSearch_wait__delay');
+                                                      await Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  100));
+                                                      logFirebaseEvent(
+                                                          'TextFieldSearch_update_page_state');
+                                                      _model.search = true;
+                                                      safeSetState(() {});
                                                     },
                                                     autofocus: false,
                                                     obscureText: false,
