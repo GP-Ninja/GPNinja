@@ -502,43 +502,44 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
                                                     EasyDebounce.debounce(
                                                   '_model.textFieldSearchTextController',
                                                   Duration(milliseconds: 500),
-                                                  () async {
-                                                    logFirebaseEvent(
-                                                        'A1_CLICKNOTE_HOME_TextFieldSearch_ON_TEX');
-                                                    logFirebaseEvent(
-                                                        'TextFieldSearch_simple_search');
-                                                    await queryFlattenedTemplatesRecordOnce()
-                                                        .then(
-                                                          (records) => _model
-                                                                  .simpleSearchResults =
-                                                              TextSearch(
-                                                            records
-                                                                .map(
-                                                                  (record) => TextSearchItem
-                                                                      .fromTerms(
-                                                                          record,
-                                                                          [
-                                                                        record
-                                                                            .templateName
-                                                                      ]),
-                                                                )
-                                                                .toList(),
-                                                          )
-                                                                  .search(_model
-                                                                      .textFieldSearchTextController
-                                                                      .text)
-                                                                  .map((r) =>
-                                                                      r.object)
-                                                                  .toList(),
-                                                        )
-                                                        .onError((_, __) =>
-                                                            _model.simpleSearchResults =
-                                                                [])
-                                                        .whenComplete(() =>
-                                                            safeSetState(
-                                                                () {}));
-                                                  },
+                                                  () => safeSetState(() {}),
                                                 ),
+                                                onFieldSubmitted: (_) async {
+                                                  logFirebaseEvent(
+                                                      'A1_CLICKNOTE_HOME_TextFieldSearch_ON_TEX');
+                                                  logFirebaseEvent(
+                                                      'TextFieldSearch_simple_search');
+                                                  await queryFlattenedTemplatesRecordOnce()
+                                                      .then(
+                                                        (records) => _model
+                                                                .simpleSearchResults =
+                                                            TextSearch(
+                                                          records
+                                                              .map(
+                                                                (record) =>
+                                                                    TextSearchItem
+                                                                        .fromTerms(
+                                                                            record,
+                                                                            [
+                                                                      record
+                                                                          .templateName
+                                                                    ]),
+                                                              )
+                                                              .toList(),
+                                                        )
+                                                                .search(_model
+                                                                    .textFieldSearchTextController
+                                                                    .text)
+                                                                .map((r) =>
+                                                                    r.object)
+                                                                .toList(),
+                                                      )
+                                                      .onError((_, __) => _model
+                                                              .simpleSearchResults =
+                                                          [])
+                                                      .whenComplete(() =>
+                                                          safeSetState(() {}));
+                                                },
                                                 autofocus: false,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
@@ -644,40 +645,6 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
                                                             _model
                                                                 .textFieldSearchTextController
                                                                 ?.clear();
-                                                            logFirebaseEvent(
-                                                                'A1_CLICKNOTE_HOME_TextFieldSearch_ON_TEX');
-                                                            logFirebaseEvent(
-                                                                'TextFieldSearch_simple_search');
-                                                            await queryFlattenedTemplatesRecordOnce()
-                                                                .then(
-                                                                  (records) => _model
-                                                                          .simpleSearchResults =
-                                                                      TextSearch(
-                                                                    records
-                                                                        .map(
-                                                                          (record) => TextSearchItem.fromTerms(
-                                                                              record,
-                                                                              [
-                                                                                record.templateName
-                                                                              ]),
-                                                                        )
-                                                                        .toList(),
-                                                                  )
-                                                                          .search(_model
-                                                                              .textFieldSearchTextController
-                                                                              .text)
-                                                                          .map((r) =>
-                                                                              r.object)
-                                                                          .toList(),
-                                                                )
-                                                                .onError((_,
-                                                                        __) =>
-                                                                    _model.simpleSearchResults =
-                                                                        [])
-                                                                .whenComplete(() =>
-                                                                    safeSetState(
-                                                                        () {}));
-
                                                             safeSetState(() {});
                                                           },
                                                           child: Icon(
