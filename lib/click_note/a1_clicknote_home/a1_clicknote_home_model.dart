@@ -11,6 +11,8 @@ class A1ClicknoteHomeModel extends FlutterFlowModel<A1ClicknoteHomeWidget> {
 
   bool myTemplates = false;
 
+  bool search = false;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Custom Action - detectDeviceTypeAction] action in a1_clicknote_home widget.
