@@ -483,229 +483,234 @@ class _A1ClicknoteHomeWidgetState extends State<A1ClicknoteHomeWidget>
                                                 ),
                                               ),
                                             ),
-                                          Stack(
-                                            alignment:
-                                                AlignmentDirectional(1.0, 0.0),
-                                            children: [
-                                              if ((_model.myTemplates ==
-                                                      false) &&
-                                                  responsiveVisibility(
-                                                    context: context,
-                                                    phone: false,
-                                                    tablet: false,
-                                                    tabletLandscape: false,
-                                                  ))
-                                                Container(
-                                                  width: 300.0,
-                                                  child: TextFormField(
-                                                    controller: _model
-                                                        .textFieldSearchTextController,
-                                                    focusNode: _model
-                                                        .textFieldSearchFocusNode,
-                                                    onFieldSubmitted:
-                                                        (_) async {
-                                                      logFirebaseEvent(
-                                                          'A1_CLICKNOTE_HOME_TextFieldSearch_ON_TEX');
-                                                      logFirebaseEvent(
-                                                          'TextFieldSearch_simple_search');
-                                                      await queryFlattenedTemplatesRecordOnce()
-                                                          .then(
-                                                            (records) => _model
-                                                                    .simpleSearchResults =
-                                                                TextSearch(
-                                                              records
-                                                                  .map(
-                                                                    (record) =>
-                                                                        TextSearchItem.fromTerms(
-                                                                            record,
-                                                                            [
-                                                                          record
-                                                                              .templateName
-                                                                        ]),
-                                                                  )
-                                                                  .toList(),
-                                                            )
-                                                                    .search(_model
-                                                                        .textFieldSearchTextController
-                                                                        .text)
-                                                                    .map((r) =>
-                                                                        r.object)
+                                          if (_model.myTemplates == false)
+                                            Stack(
+                                              alignment: AlignmentDirectional(
+                                                  1.0, 0.0),
+                                              children: [
+                                                if ((_model.myTemplates ==
+                                                        false) &&
+                                                    responsiveVisibility(
+                                                      context: context,
+                                                      phone: false,
+                                                      tablet: false,
+                                                      tabletLandscape: false,
+                                                    ))
+                                                  Container(
+                                                    width: 300.0,
+                                                    child: TextFormField(
+                                                      controller: _model
+                                                          .textFieldSearchTextController,
+                                                      focusNode: _model
+                                                          .textFieldSearchFocusNode,
+                                                      onFieldSubmitted:
+                                                          (_) async {
+                                                        logFirebaseEvent(
+                                                            'A1_CLICKNOTE_HOME_TextFieldSearch_ON_TEX');
+                                                        logFirebaseEvent(
+                                                            'TextFieldSearch_simple_search');
+                                                        await queryFlattenedTemplatesRecordOnce()
+                                                            .then(
+                                                              (records) => _model
+                                                                      .simpleSearchResults =
+                                                                  TextSearch(
+                                                                records
+                                                                    .map(
+                                                                      (record) =>
+                                                                          TextSearchItem.fromTerms(
+                                                                              record,
+                                                                              [
+                                                                            record.templateName
+                                                                          ]),
+                                                                    )
                                                                     .toList(),
-                                                          )
-                                                          .onError((_, __) =>
-                                                              _model.simpleSearchResults =
-                                                                  [])
-                                                          .whenComplete(() =>
-                                                              safeSetState(
-                                                                  () {}));
+                                                              )
+                                                                      .search(_model
+                                                                          .textFieldSearchTextController
+                                                                          .text)
+                                                                      .map((r) =>
+                                                                          r.object)
+                                                                      .toList(),
+                                                            )
+                                                            .onError((_, __) =>
+                                                                _model.simpleSearchResults =
+                                                                    [])
+                                                            .whenComplete(() =>
+                                                                safeSetState(
+                                                                    () {}));
 
+                                                        logFirebaseEvent(
+                                                            'TextFieldSearch_update_page_state');
+                                                        _model.search = true;
+                                                        safeSetState(() {});
+                                                      },
+                                                      autofocus: false,
+                                                      obscureText: false,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        isDense: true,
+                                                        labelStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumFamily,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .labelMediumFamily),
+                                                                ),
+                                                        hintText:
+                                                            'Type here...',
+                                                        hintStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumFamily,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .labelMediumFamily),
+                                                                ),
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .accent3,
+                                                            width: 2.0,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: Color(
+                                                                0x00000000),
+                                                            width: 2.0,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        errorBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .error,
+                                                            width: 2.0,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        focusedErrorBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .error,
+                                                            width: 2.0,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        filled: true,
+                                                        fillColor: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
+                                                        prefixIcon: Icon(
+                                                          Icons.search,
+                                                        ),
+                                                      ),
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                useGoogleFonts: GoogleFonts
+                                                                        .asMap()
+                                                                    .containsKey(
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyMediumFamily),
+                                                              ),
+                                                      cursorColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                      validator: _model
+                                                          .textFieldSearchTextControllerValidator
+                                                          .asValidator(context),
+                                                    ),
+                                                  ),
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 0.0, 10.0, 0.0),
+                                                  child: InkWell(
+                                                    splashColor:
+                                                        Colors.transparent,
+                                                    focusColor:
+                                                        Colors.transparent,
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    onTap: () async {
                                                       logFirebaseEvent(
-                                                          'TextFieldSearch_wait__delay');
-                                                      await Future.delayed(
-                                                          const Duration(
-                                                              milliseconds:
-                                                                  100));
+                                                          'A1_CLICKNOTE_HOME_Icon_lwe4k1os_ON_TAP');
                                                       logFirebaseEvent(
-                                                          'TextFieldSearch_update_page_state');
-                                                      _model.search = true;
+                                                          'Icon_clear_text_fields_pin_codes');
+                                                      safeSetState(() {
+                                                        _model
+                                                            .textFieldSearchTextController
+                                                            ?.clear();
+                                                      });
+                                                      logFirebaseEvent(
+                                                          'Icon_update_page_state');
+                                                      _model.search = false;
                                                       safeSetState(() {});
                                                     },
-                                                    autofocus: false,
-                                                    obscureText: false,
-                                                    decoration: InputDecoration(
-                                                      isDense: true,
-                                                      labelStyle:
+                                                    child: Icon(
+                                                      Icons.close,
+                                                      color:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .labelMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMediumFamily,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts: GoogleFonts
-                                                                        .asMap()
-                                                                    .containsKey(
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .labelMediumFamily),
-                                                              ),
-                                                      hintText: 'Type here...',
-                                                      hintStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMediumFamily,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts: GoogleFonts
-                                                                        .asMap()
-                                                                    .containsKey(
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .labelMediumFamily),
-                                                              ),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
                                                               .accent3,
-                                                          width: 2.0,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20.0),
-                                                      ),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color:
-                                                              Color(0x00000000),
-                                                          width: 2.0,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20.0),
-                                                      ),
-                                                      errorBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .error,
-                                                          width: 2.0,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20.0),
-                                                      ),
-                                                      focusedErrorBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .error,
-                                                          width: 2.0,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20.0),
-                                                      ),
-                                                      filled: true,
-                                                      fillColor: FlutterFlowTheme
-                                                              .of(context)
-                                                          .secondaryBackground,
-                                                      prefixIcon: Icon(
-                                                        Icons.search,
-                                                      ),
+                                                      size: 24.0,
                                                     ),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMediumFamily,
-                                                          letterSpacing: 0.0,
-                                                          useGoogleFonts: GoogleFonts
-                                                                  .asMap()
-                                                              .containsKey(
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMediumFamily),
-                                                        ),
-                                                    cursorColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .primaryText,
-                                                    validator: _model
-                                                        .textFieldSearchTextControllerValidator
-                                                        .asValidator(context),
                                                   ),
                                                 ),
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 10.0, 0.0),
-                                                child: InkWell(
-                                                  splashColor:
-                                                      Colors.transparent,
-                                                  focusColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  highlightColor:
-                                                      Colors.transparent,
-                                                  onTap: () async {
-                                                    logFirebaseEvent(
-                                                        'A1_CLICKNOTE_HOME_Icon_lwe4k1os_ON_TAP');
-                                                    logFirebaseEvent(
-                                                        'Icon_clear_text_fields_pin_codes');
-                                                    safeSetState(() {
-                                                      _model
-                                                          .textFieldSearchTextController
-                                                          ?.clear();
-                                                    });
-                                                    logFirebaseEvent(
-                                                        'Icon_update_page_state');
-                                                    _model.search = false;
-                                                    safeSetState(() {});
-                                                  },
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .accent3,
-                                                    size: 24.0,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                              ],
+                                            ),
                                           if (responsiveVisibility(
                                             context: context,
                                             desktop: false,
