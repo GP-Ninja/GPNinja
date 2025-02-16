@@ -62,6 +62,11 @@ class PresentingComplaintsRecord extends FirestoreRecord {
   DocumentReference? get iNote => _iNote;
   bool hasINote() => _iNote != null;
 
+  // "is_safety_net" field.
+  bool? _isSafetyNet;
+  bool get isSafetyNet => _isSafetyNet ?? false;
+  bool hasIsSafetyNet() => _isSafetyNet != null;
+
   void _initializeFields() {
     _pc = snapshotData['pc'] as String?;
     _history = snapshotData['history'] as String?;
@@ -72,6 +77,7 @@ class PresentingComplaintsRecord extends FirestoreRecord {
     _owner = snapshotData['owner'] as DocumentReference?;
     _textMessage = snapshotData['text_message'] as String?;
     _iNote = snapshotData['i_note'] as DocumentReference?;
+    _isSafetyNet = snapshotData['is_safety_net'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -118,6 +124,7 @@ class PresentingComplaintsRecord extends FirestoreRecord {
             ParamType.DocumentReference,
             false,
           ),
+          'is_safety_net': snapshot.data['is_safety_net'],
         },
         PresentingComplaintsRecord.collection.doc(snapshot.objectID),
       );
@@ -163,6 +170,7 @@ Map<String, dynamic> createPresentingComplaintsRecordData({
   DocumentReference? owner,
   String? textMessage,
   DocumentReference? iNote,
+  bool? isSafetyNet,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -175,6 +183,7 @@ Map<String, dynamic> createPresentingComplaintsRecordData({
       'owner': owner,
       'text_message': textMessage,
       'i_note': iNote,
+      'is_safety_net': isSafetyNet,
     }.withoutNulls,
   );
 
@@ -195,7 +204,8 @@ class PresentingComplaintsRecordDocumentEquality
         e1?.notes == e2?.notes &&
         e1?.owner == e2?.owner &&
         e1?.textMessage == e2?.textMessage &&
-        e1?.iNote == e2?.iNote;
+        e1?.iNote == e2?.iNote &&
+        e1?.isSafetyNet == e2?.isSafetyNet;
   }
 
   @override
@@ -208,7 +218,8 @@ class PresentingComplaintsRecordDocumentEquality
         e?.notes,
         e?.owner,
         e?.textMessage,
-        e?.iNote
+        e?.iNote,
+        e?.isSafetyNet
       ]);
 
   @override

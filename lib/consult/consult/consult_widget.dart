@@ -10,7 +10,6 @@ import '/consult/google_result/google_result_widget.dart';
 import '/consult/local_resource/local_resource_widget.dart';
 import '/consult/placeholder_community_resources/placeholder_community_resources_widget.dart';
 import '/consult/placeholder_key_resources/placeholder_key_resources_widget.dart';
-import '/consult/placeholder_static_template/placeholder_static_template_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -23,6 +22,7 @@ import 'package:aligned_tooltip/aligned_tooltip.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -61,31 +61,23 @@ class _ConsultWidgetState extends State<ConsultWidget>
     _model = createModel(context, () => ConsultModel());
 
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'consult'});
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('CONSULT_PAGE_consult_ON_INIT_STATE');
+      logFirebaseEvent('consult_update_app_state');
+      FFAppState().searchTerm = false;
+      safeSetState(() {});
+    });
+
     _model.textFieldSearchTextController ??= TextEditingController();
     _model.textFieldSearchFocusNode ??= FocusNode();
 
     _model.switchCKSValue = true;
-    _model.textFieldPCSmallTextController ??=
-        TextEditingController(text: 'Template');
-    _model.textFieldPCSmallFocusNode ??= FocusNode();
-
-    _model.textFieldPlanSmallTextController ??= TextEditingController();
-    _model.textFieldPlanSmallFocusNode ??= FocusNode();
-
-    _model.textFieldNotesSmallTextController ??= TextEditingController();
-    _model.textFieldNotesSmallFocusNode ??= FocusNode();
+    _model.textFieldSafetyNetSmallTextController ??= TextEditingController();
+    _model.textFieldSafetyNetSmallFocusNode ??= FocusNode();
 
     _model.textFieldTextSmallTextController ??= TextEditingController();
     _model.textFieldTextSmallFocusNode ??= FocusNode();
-
-    _model.textFieldHxSmallTextController ??= TextEditingController();
-    _model.textFieldHxSmallFocusNode ??= FocusNode();
-
-    _model.textFieldExSmallTextController ??= TextEditingController();
-    _model.textFieldExSmallFocusNode ??= FocusNode();
-
-    _model.textFieldImSmallTextController ??= TextEditingController();
-    _model.textFieldImSmallFocusNode ??= FocusNode();
 
     _model.textFieldPCTextController ??= TextEditingController();
     _model.textFieldPCFocusNode ??= FocusNode();
@@ -706,67 +698,36 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                       'Timer2_update_app_state');
                                                                   FFAppState().templateref = _model
                                                                       .algoliaSearchResults1
-                                                                      ?.firstOrNull
+                                                                      ?.where((e) =>
+                                                                          e.hasIsSafetyNet() ==
+                                                                          true)
+                                                                      .toList()
+                                                                      .firstOrNull
                                                                       ?.reference;
+                                                                  safeSetState(
+                                                                      () {});
+                                                                  logFirebaseEvent(
+                                                                      'Timer2_update_page_state');
+                                                                  _model.templateSelected = _model
+                                                                      .algoliaSearchResults1
+                                                                      ?.where((e) =>
+                                                                          e.hasIsSafetyNet() ==
+                                                                          true)
+                                                                      .toList()
+                                                                      .firstOrNull
+                                                                      ?.pc;
                                                                   safeSetState(
                                                                       () {});
                                                                   logFirebaseEvent(
                                                                       'Timer2_set_form_field');
                                                                   safeSetState(
                                                                       () {
-                                                                    _model.textFieldPCSmallTextController
-                                                                            ?.text =
-                                                                        _model
-                                                                            .algoliaSearchResults1!
-                                                                            .firstOrNull!
-                                                                            .pc;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldHxSmallTextController?.text = _model
+                                                                    _model.textFieldSafetyNetSmallTextController?.text = _model
                                                                         .algoliaSearchResults1!
-                                                                        .firstOrNull!
-                                                                        .history;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldExSmallTextController
-                                                                            ?.text =
-                                                                        _model
-                                                                            .algoliaSearchResults1!
-                                                                            .firstOrNull!
-                                                                            .exam;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldImSmallTextController?.text = _model
-                                                                        .algoliaSearchResults1!
-                                                                        .firstOrNull!
-                                                                        .impression;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldPlanSmallTextController
-                                                                            ?.text =
-                                                                        _model
-                                                                            .algoliaSearchResults1!
-                                                                            .firstOrNull!
-                                                                            .plan;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldNotesSmallTextController?.text = _model
-                                                                        .algoliaSearchResults1!
+                                                                        .where((e) =>
+                                                                            e.hasIsSafetyNet() ==
+                                                                            true)
+                                                                        .toList()
                                                                         .firstOrNull!
                                                                         .notes;
                                                                   });
@@ -776,75 +737,10 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                       () {
                                                                     _model.textFieldTextSmallTextController?.text = _model
                                                                         .algoliaSearchResults1!
-                                                                        .firstOrNull!
-                                                                        .textMessage;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldPCTextController
-                                                                            ?.text =
-                                                                        _model
-                                                                            .algoliaSearchResults1!
-                                                                            .firstOrNull!
-                                                                            .pc;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldHxTextController?.text = _model
-                                                                        .algoliaSearchResults1!
-                                                                        .firstOrNull!
-                                                                        .history;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldExTextController
-                                                                            ?.text =
-                                                                        _model
-                                                                            .algoliaSearchResults1!
-                                                                            .firstOrNull!
-                                                                            .exam;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldImTextController?.text = _model
-                                                                        .algoliaSearchResults1!
-                                                                        .firstOrNull!
-                                                                        .impression;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldPlanTextController
-                                                                            ?.text =
-                                                                        _model
-                                                                            .algoliaSearchResults1!
-                                                                            .firstOrNull!
-                                                                            .plan;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldNotesTextController?.text = _model
-                                                                        .algoliaSearchResults1!
-                                                                        .firstOrNull!
-                                                                        .notes;
-                                                                  });
-                                                                  logFirebaseEvent(
-                                                                      'Timer2_set_form_field');
-                                                                  safeSetState(
-                                                                      () {
-                                                                    _model.textFieldTextTextController?.text = _model
-                                                                        .algoliaSearchResults1!
+                                                                        .where((e) =>
+                                                                            e.hasIsSafetyNet() ==
+                                                                            true)
+                                                                        .toList()
                                                                         .firstOrNull!
                                                                         .textMessage;
                                                                   });
@@ -1137,7 +1033,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                             .bodyMedium
                                                                             .override(
                                                                               fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                              color: _model.mouseRegionLocalHovered == true ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).accent3,
+                                                                              color: _model.mouseRegionLocalHovered == true ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).secondaryText,
                                                                               letterSpacing: 0.0,
                                                                               useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
                                                                             ),
@@ -1389,7 +1285,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
                                                                         : FlutterFlowTheme.of(context)
-                                                                            .accent3,
+                                                                            .secondaryText,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     useGoogleFonts: GoogleFonts
@@ -1844,7 +1740,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
                                                                         : FlutterFlowTheme.of(context)
-                                                                            .accent3,
+                                                                            .secondaryText,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     useGoogleFonts: GoogleFonts
@@ -2295,7 +2191,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
                                                                         : FlutterFlowTheme.of(context)
-                                                                            .accent3,
+                                                                            .secondaryText,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     useGoogleFonts: GoogleFonts
@@ -2305,7 +2201,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                   ),
                                                             ),
                                                             SizedBox(
-                                                              width: 220.0,
+                                                              width: 275.0,
                                                               child: Divider(
                                                                 height: 10.0,
                                                                 thickness: 1.0,
@@ -2964,12 +2860,12 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                     fontFamily:
                                                                         FlutterFlowTheme.of(context)
                                                                             .bodyMediumFamily,
-                                                                    color: _model.mouseRegionHovered5 ==
+                                                                    color: _model.mouseRegionCalcsHovered ==
                                                                             true
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
                                                                         : FlutterFlowTheme.of(context)
-                                                                            .accent3,
+                                                                            .secondaryText,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     useGoogleFonts: GoogleFonts
@@ -2979,12 +2875,16 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                   ),
                                                             ),
                                                             SizedBox(
-                                                              width: 85.0,
+                                                              width:
+                                                                  _model.mouseRegionMDCALCOptionsHovered ==
+                                                                          true
+                                                                      ? 360.0
+                                                                      : 85.0,
                                                               child: Divider(
                                                                 height: 10.0,
                                                                 thickness: 1.0,
                                                                 color: _model
-                                                                            .mouseRegionHovered5 ==
+                                                                            .mouseRegionCalcsHovered ==
                                                                         true
                                                                     ? FlutterFlowTheme.of(
                                                                             context)
@@ -3490,12 +3390,12 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                       ),
                                                       onEnter: ((event) async {
                                                         safeSetState(() => _model
-                                                                .mouseRegionHovered5 =
+                                                                .mouseRegionCalcsHovered =
                                                             true);
                                                       }),
                                                       onExit: ((event) async {
                                                         safeSetState(() => _model
-                                                                .mouseRegionHovered5 =
+                                                                .mouseRegionCalcsHovered =
                                                             false);
                                                       }),
                                                     ),
@@ -3528,12 +3428,12 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                     fontFamily:
                                                                         FlutterFlowTheme.of(context)
                                                                             .bodyMediumFamily,
-                                                                    color: _model.mouseRegionHovered6 ==
+                                                                    color: _model.mouseRegionHovered5 ==
                                                                             true
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
                                                                         : FlutterFlowTheme.of(context)
-                                                                            .accent3,
+                                                                            .secondaryText,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     useGoogleFonts: GoogleFonts
@@ -3548,7 +3448,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                 height: 10.0,
                                                                 thickness: 1.0,
                                                                 color: _model
-                                                                            .mouseRegionHovered6 ==
+                                                                            .mouseRegionHovered5 ==
                                                                         true
                                                                     ? FlutterFlowTheme.of(
                                                                             context)
@@ -3904,12 +3804,12 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                       ),
                                                       onEnter: ((event) async {
                                                         safeSetState(() => _model
-                                                                .mouseRegionHovered6 =
+                                                                .mouseRegionHovered5 =
                                                             true);
                                                       }),
                                                       onExit: ((event) async {
                                                         safeSetState(() => _model
-                                                                .mouseRegionHovered6 =
+                                                                .mouseRegionHovered5 =
                                                             false);
                                                       }),
                                                     ),
@@ -3983,7 +3883,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                                 FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                             color: _model.mouseRegionCombinedHovered == true
                                                                                 ? FlutterFlowTheme.of(context).hover
-                                                                                : FlutterFlowTheme.of(context).accent3,
+                                                                                : FlutterFlowTheme.of(context).secondaryText,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             useGoogleFonts:
@@ -4098,7 +3998,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                 width: MediaQuery.sizeOf(
                                                                             context)
                                                                         .width *
-                                                                    0.3,
+                                                                    0.6,
                                                                 height: MediaQuery.sizeOf(
                                                                             context)
                                                                         .height *
@@ -4221,30 +4121,30 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                           }),
                                                         ),
                                                       ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    20.0,
-                                                                    0.0,
-                                                                    20.0,
-                                                                    0.0),
+                                                      Container(
+                                                        height:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .height *
+                                                                0.63,
+                                                        decoration:
+                                                            BoxDecoration(),
                                                         child: Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
                                                           children: [
-                                                            Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                MouseRegion(
-                                                                  opaque: false,
-                                                                  cursor: MouseCursor
-                                                                          .defer ??
-                                                                      MouseCursor
-                                                                          .defer,
-                                                                  child: Row(
+                                                            MouseRegion(
+                                                              opaque: false,
+                                                              cursor: MouseCursor
+                                                                      .defer ??
+                                                                  MouseCursor
+                                                                      .defer,
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Row(
                                                                     mainAxisSize:
                                                                         MainAxisSize
                                                                             .max,
@@ -4257,23 +4157,22 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                             5.0),
                                                                         child:
                                                                             Text(
-                                                                          'Templates matching your search',
+                                                                          'Resources uploaded by users',
                                                                           textAlign:
                                                                               TextAlign.center,
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .override(
                                                                                 fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                color: (_model.mouseRegionTemplatesHeaderHovered == true) || (_model.mouseRegionTemplatesHovered == true) ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).accent3,
+                                                                                color: _model.mouseRegionUserUploadedResourcesHovered == true ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).secondaryText,
                                                                                 letterSpacing: 0.0,
                                                                                 useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
                                                                               ),
                                                                         ),
                                                                       ),
-                                                                      if ((_model.mouseRegionTemplatesHeaderHovered ==
-                                                                              true) ||
-                                                                          (_model.mouseRegionTemplatesHovered ==
-                                                                              true))
+                                                                      if (_model
+                                                                              .mouseRegionUserUploadedResourcesHovered ==
+                                                                          true)
                                                                         Padding(
                                                                           padding: EdgeInsetsDirectional.fromSTEB(
                                                                               5.0,
@@ -4281,1320 +4180,339 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                               0.0,
                                                                               0.0),
                                                                           child:
-                                                                              FFButtonWidget(
-                                                                            onPressed:
-                                                                                () async {
-                                                                              logFirebaseEvent('CONSULT_PAGE_VIEW_ALL_BTN_ON_TAP');
-                                                                              if (FFAppState().templateView == false) {
-                                                                                if (_model.textFieldSearchTextController.text != '') {
-                                                                                  logFirebaseEvent('Button_update_app_state');
-                                                                                  FFAppState().templateView = true;
-                                                                                  safeSetState(() {});
-                                                                                } else {
-                                                                                  logFirebaseEvent('Button_update_app_state');
-                                                                                  FFAppState().templateView = true;
-                                                                                  FFAppState().templateref = null;
-                                                                                  safeSetState(() {});
-                                                                                }
-                                                                              } else {
-                                                                                logFirebaseEvent('Button_update_app_state');
-                                                                                FFAppState().templateView = false;
-                                                                                safeSetState(() {});
-                                                                              }
-                                                                            },
-                                                                            text:
-                                                                                'View all',
-                                                                            options:
-                                                                                FFButtonOptions(
-                                                                              width: 70.0,
-                                                                              height: 20.0,
-                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                                                              color: FlutterFlowTheme.of(context).primary,
-                                                                              textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                    fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
-                                                                                    color: Colors.white,
-                                                                                    fontSize: 14.0,
-                                                                                    letterSpacing: 0.0,
-                                                                                    useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleSmallFamily),
-                                                                                  ),
-                                                                              elevation: 3.0,
-                                                                              borderSide: BorderSide(
-                                                                                color: Colors.transparent,
-                                                                                width: 1.0,
+                                                                              AlignedTooltip(
+                                                                            content:
+                                                                                Padding(
+                                                                              padding: EdgeInsets.all(4.0),
+                                                                              child: Text(
+                                                                                'Submit a useful resource for others to see',
+                                                                                style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                                      fontFamily: FlutterFlowTheme.of(context).bodyLargeFamily,
+                                                                                      fontSize: 14.0,
+                                                                                      letterSpacing: 0.0,
+                                                                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyLargeFamily),
+                                                                                    ),
                                                                               ),
-                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                            ),
+                                                                            offset:
+                                                                                4.0,
+                                                                            preferredDirection:
+                                                                                AxisDirection.down,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(8.0),
+                                                                            backgroundColor:
+                                                                                FlutterFlowTheme.of(context).secondaryBackground,
+                                                                            elevation:
+                                                                                4.0,
+                                                                            tailBaseWidth:
+                                                                                24.0,
+                                                                            tailLength:
+                                                                                12.0,
+                                                                            waitDuration:
+                                                                                Duration(milliseconds: 0),
+                                                                            showDuration:
+                                                                                Duration(milliseconds: 0),
+                                                                            triggerMode:
+                                                                                TooltipTriggerMode.tap,
+                                                                            child:
+                                                                                InkWell(
+                                                                              splashColor: Colors.transparent,
+                                                                              focusColor: Colors.transparent,
+                                                                              hoverColor: Colors.transparent,
+                                                                              highlightColor: Colors.transparent,
+                                                                              onTap: () async {
+                                                                                logFirebaseEvent('CONSULT_PAGE_Icon_5jp59n9t_ON_TAP');
+                                                                                logFirebaseEvent('Icon_bottom_sheet');
+                                                                                await showModalBottomSheet(
+                                                                                  isScrollControlled: true,
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  enableDrag: false,
+                                                                                  context: context,
+                                                                                  builder: (context) {
+                                                                                    return WebViewAware(
+                                                                                      child: GestureDetector(
+                                                                                        onTap: () {
+                                                                                          FocusScope.of(context).unfocus();
+                                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                                        },
+                                                                                        child: Padding(
+                                                                                          padding: MediaQuery.viewInsetsOf(context),
+                                                                                          child: AddResourceWidget(),
+                                                                                        ),
+                                                                                      ),
+                                                                                    );
+                                                                                  },
+                                                                                ).then((value) => safeSetState(() {}));
+                                                                              },
+                                                                              child: Icon(
+                                                                                Icons.add_box,
+                                                                                color: _model.mouseRegionUserUploadedResourcesHovered == true ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).secondaryText,
+                                                                                size: 20.0,
+                                                                              ),
                                                                             ),
                                                                           ),
                                                                         ),
                                                                     ],
                                                                   ),
-                                                                  onEnter:
-                                                                      ((event) async {
-                                                                    safeSetState(() =>
-                                                                        _model.mouseRegionTemplatesHeaderHovered =
-                                                                            true);
-                                                                  }),
-                                                                  onExit:
-                                                                      ((event) async {
-                                                                    safeSetState(() =>
-                                                                        _model.mouseRegionTemplatesHeaderHovered =
-                                                                            false);
-                                                                  }),
-                                                                ),
-                                                                Container(
-                                                                  width: MediaQuery.sizeOf(
+                                                                  Container(
+                                                                    width: MediaQuery.sizeOf(context)
+                                                                            .width *
+                                                                        0.35,
+                                                                    height: MediaQuery.sizeOf(context)
+                                                                            .height *
+                                                                        0.25,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FlutterFlowTheme.of(
                                                                               context)
-                                                                          .width *
-                                                                      0.3,
-                                                                  height: MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .height *
-                                                                      0.63,
-                                                                  decoration:
-                                                                      BoxDecoration(),
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    children: [
-                                                                      MouseRegion(
-                                                                        opaque:
-                                                                            false,
-                                                                        cursor: MouseCursor.defer ??
-                                                                            MouseCursor.defer,
-                                                                        child:
-                                                                            Container(
-                                                                          width:
-                                                                              MediaQuery.sizeOf(context).width * 0.3,
-                                                                          height:
-                                                                              MediaQuery.sizeOf(context).height * 0.15,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).secondaryBackground,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10.0),
-                                                                            border:
-                                                                                Border.all(
-                                                                              color: (_model.mouseRegionTemplatesHeaderHovered == true) || (_model.mouseRegionTemplatesHovered == true) ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).accent3,
-                                                                            ),
-                                                                          ),
-                                                                          child:
-                                                                              Align(
+                                                                          .secondaryBackground,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10.0),
+                                                                      border:
+                                                                          Border
+                                                                              .all(
+                                                                        color: _model.mouseRegionUserUploadedResourcesHovered ==
+                                                                                true
+                                                                            ? FlutterFlowTheme.of(context).hover
+                                                                            : FlutterFlowTheme.of(context).accent3,
+                                                                      ),
+                                                                    ),
+                                                                    child:
+                                                                        Stack(
+                                                                      children: [
+                                                                        if (FFAppState().searchTerm ==
+                                                                            true)
+                                                                          Align(
                                                                             alignment:
                                                                                 AlignmentDirectional(0.0, 0.0),
                                                                             child:
-                                                                                Stack(
-                                                                              alignment: AlignmentDirectional(0.0, 0.0),
-                                                                              children: [
-                                                                                if (FFAppState().searchTerm == true)
-                                                                                  Align(
-                                                                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                                                                    child: Padding(
-                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
-                                                                                      child: Builder(
-                                                                                        builder: (context) {
-                                                                                          if (_model.algoliaSearchResults1 == null) {
-                                                                                            return Center(
-                                                                                              child: SizedBox(
-                                                                                                width: 50.0,
-                                                                                                height: 50.0,
-                                                                                                child: SpinKitPulse(
-                                                                                                  color: FlutterFlowTheme.of(context).primary,
-                                                                                                  size: 50.0,
+                                                                                Padding(
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                                                                              child: Builder(
+                                                                                builder: (context) {
+                                                                                  if (_model.algoliaSearchResults2?.where((e) => e.popularity >= 1).toList() == null) {
+                                                                                    return Center(
+                                                                                      child: SizedBox(
+                                                                                        width: 50.0,
+                                                                                        height: 50.0,
+                                                                                        child: SpinKitPulse(
+                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                          size: 50.0,
+                                                                                        ),
+                                                                                      ),
+                                                                                    );
+                                                                                  }
+                                                                                  final resourcesMatching = _model.algoliaSearchResults2?.where((e) => e.popularity >= 1).toList().toList() ?? [];
+                                                                                  if (resourcesMatching.isEmpty) {
+                                                                                    return PlaceholderCommunityResourcesWidget();
+                                                                                  }
+
+                                                                                  return ListView.builder(
+                                                                                    padding: EdgeInsets.zero,
+                                                                                    scrollDirection: Axis.vertical,
+                                                                                    itemCount: resourcesMatching.length,
+                                                                                    itemBuilder: (context, resourcesMatchingIndex) {
+                                                                                      final resourcesMatchingItem = resourcesMatching[resourcesMatchingIndex];
+                                                                                      return Padding(
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
+                                                                                        child: StreamBuilder<ResourcesRecord>(
+                                                                                          stream: ResourcesRecord.getDocument(resourcesMatchingItem.reference),
+                                                                                          builder: (context, snapshot) {
+                                                                                            // Customize what your widget looks like when it's loading.
+                                                                                            if (!snapshot.hasData) {
+                                                                                              return Center(
+                                                                                                child: SizedBox(
+                                                                                                  width: 50.0,
+                                                                                                  height: 50.0,
+                                                                                                  child: SpinKitPulse(
+                                                                                                    color: FlutterFlowTheme.of(context).primary,
+                                                                                                    size: 50.0,
+                                                                                                  ),
                                                                                                 ),
+                                                                                              );
+                                                                                            }
+
+                                                                                            final containerResourcesRecord = snapshot.data!;
+
+                                                                                            return Container(
+                                                                                              width: double.infinity,
+                                                                                              height: 90.0,
+                                                                                              decoration: BoxDecoration(
+                                                                                                color: FlutterFlowTheme.of(context).primaryBackground,
+                                                                                                borderRadius: BorderRadius.circular(10.0),
                                                                                               ),
-                                                                                            );
-                                                                                          }
-                                                                                          final matchingTemplates = _model.algoliaSearchResults1?.toList() ?? [];
-
-                                                                                          return ListView.builder(
-                                                                                            padding: EdgeInsets.zero,
-                                                                                            scrollDirection: Axis.vertical,
-                                                                                            itemCount: matchingTemplates.length,
-                                                                                            itemBuilder: (context, matchingTemplatesIndex) {
-                                                                                              final matchingTemplatesItem = matchingTemplates[matchingTemplatesIndex];
-                                                                                              return Stack(
+                                                                                              child: Column(
+                                                                                                mainAxisSize: MainAxisSize.max,
                                                                                                 children: [
-                                                                                                  if ((matchingTemplatesItem.owner == null) || (matchingTemplatesItem.owner == currentUserReference))
-                                                                                                    Padding(
-                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 5.0),
-                                                                                                      child: StreamBuilder<PresentingComplaintsRecord>(
-                                                                                                        stream: PresentingComplaintsRecord.getDocument(matchingTemplatesItem.reference),
-                                                                                                        builder: (context, snapshot) {
-                                                                                                          // Customize what your widget looks like when it's loading.
-                                                                                                          if (!snapshot.hasData) {
-                                                                                                            return Center(
-                                                                                                              child: SizedBox(
-                                                                                                                width: 50.0,
-                                                                                                                height: 50.0,
-                                                                                                                child: SpinKitPulse(
-                                                                                                                  color: FlutterFlowTheme.of(context).primary,
-                                                                                                                  size: 50.0,
-                                                                                                                ),
-                                                                                                              ),
-                                                                                                            );
-                                                                                                          }
+                                                                                                  Padding(
+                                                                                                    padding: EdgeInsets.all(5.0),
+                                                                                                    child: Row(
+                                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                                      children: [
+                                                                                                        Container(
+                                                                                                          width: 100.0,
+                                                                                                          height: 50.0,
+                                                                                                          decoration: BoxDecoration(
+                                                                                                            color: FlutterFlowTheme.of(context).primaryBackground,
+                                                                                                          ),
+                                                                                                          child: Row(
+                                                                                                            mainAxisSize: MainAxisSize.min,
+                                                                                                            children: [
+                                                                                                              ToggleIcon(
+                                                                                                                onPressed: () async {
+                                                                                                                  final upvotedElement = currentUserReference;
+                                                                                                                  final upvotedUpdate = containerResourcesRecord.upvoted.contains(upvotedElement) ? FieldValue.arrayRemove([upvotedElement]) : FieldValue.arrayUnion([upvotedElement]);
+                                                                                                                  await containerResourcesRecord.reference.update({
+                                                                                                                    ...mapToFirestore(
+                                                                                                                      {
+                                                                                                                        'upvoted': upvotedUpdate,
+                                                                                                                      },
+                                                                                                                    ),
+                                                                                                                  });
+                                                                                                                  logFirebaseEvent('CONSULT_ToggleIcon_eriiacgs_ON_TOGGLE');
+                                                                                                                  if (loggedIn) {
+                                                                                                                    if (containerResourcesRecord.upvoted.contains(currentUserReference)) {
+                                                                                                                      logFirebaseEvent('ToggleIcon_backend_call');
 
-                                                                                                          final containerPresentingComplaintsRecord = snapshot.data!;
-
-                                                                                                          return InkWell(
-                                                                                                            splashColor: Colors.transparent,
-                                                                                                            focusColor: Colors.transparent,
-                                                                                                            hoverColor: Colors.transparent,
-                                                                                                            highlightColor: Colors.transparent,
-                                                                                                            onTap: () async {
-                                                                                                              logFirebaseEvent('CONSULT_PAGE_Container_0ejx4voj_ON_TAP');
-                                                                                                              if (!(matchingTemplatesItem.iNote != null)) {
-                                                                                                                logFirebaseEvent('Container_update_app_state');
-                                                                                                                FFAppState().templateref = containerPresentingComplaintsRecord.reference;
-                                                                                                                safeSetState(() {});
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldPCTextController?.text = containerPresentingComplaintsRecord.pc;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldHxTextController?.text = containerPresentingComplaintsRecord.history;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldExTextController?.text = containerPresentingComplaintsRecord.exam;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldImTextController?.text = containerPresentingComplaintsRecord.impression;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldPlanTextController?.text = containerPresentingComplaintsRecord.plan;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldNotesTextController?.text = containerPresentingComplaintsRecord.notes;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldTextTextController?.text = containerPresentingComplaintsRecord.textMessage;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldPCSmallTextController?.text = containerPresentingComplaintsRecord.pc;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldHxSmallTextController?.text = containerPresentingComplaintsRecord.history;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldExSmallTextController?.text = containerPresentingComplaintsRecord.exam;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldImSmallTextController?.text = containerPresentingComplaintsRecord.impression;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldPlanSmallTextController?.text = containerPresentingComplaintsRecord.plan;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldNotesSmallTextController?.text = containerPresentingComplaintsRecord.notes;
-                                                                                                                });
-                                                                                                                logFirebaseEvent('Container_set_form_field');
-                                                                                                                safeSetState(() {
-                                                                                                                  _model.textFieldTextSmallTextController?.text = containerPresentingComplaintsRecord.textMessage;
-                                                                                                                });
-                                                                                                              }
-                                                                                                            },
-                                                                                                            child: Container(
-                                                                                                              width: double.infinity,
-                                                                                                              height: 50.0,
-                                                                                                              decoration: BoxDecoration(
-                                                                                                                color: matchingTemplatesItem.iNote != null ? FlutterFlowTheme.of(context).accent3 : FlutterFlowTheme.of(context).primaryBackground,
-                                                                                                                borderRadius: BorderRadius.circular(10.0),
-                                                                                                              ),
-                                                                                                              child: StreamBuilder<PresentingComplaintsRecord>(
-                                                                                                                stream: PresentingComplaintsRecord.getDocument(containerPresentingComplaintsRecord.reference),
-                                                                                                                builder: (context, snapshot) {
-                                                                                                                  // Customize what your widget looks like when it's loading.
-                                                                                                                  if (!snapshot.hasData) {
-                                                                                                                    return Center(
-                                                                                                                      child: SizedBox(
-                                                                                                                        width: 50.0,
-                                                                                                                        height: 50.0,
-                                                                                                                        child: SpinKitPulse(
-                                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                                          size: 50.0,
+                                                                                                                      await containerResourcesRecord.reference.update({
+                                                                                                                        ...mapToFirestore(
+                                                                                                                          {
+                                                                                                                            'popularity': FieldValue.increment(-(1)),
+                                                                                                                            'upvoted': FieldValue.arrayRemove([currentUserReference]),
+                                                                                                                          },
                                                                                                                         ),
+                                                                                                                      });
+                                                                                                                      logFirebaseEvent('ToggleIcon_wait__delay');
+                                                                                                                      await Future.delayed(const Duration(milliseconds: 1200));
+                                                                                                                      logFirebaseEvent('ToggleIcon_set_form_field');
+                                                                                                                      safeSetState(() {
+                                                                                                                        _model.textFieldSearchTextController?.text = _model.textFieldSearchTextController.text;
+                                                                                                                      });
+                                                                                                                    } else {
+                                                                                                                      logFirebaseEvent('ToggleIcon_backend_call');
+
+                                                                                                                      await containerResourcesRecord.reference.update({
+                                                                                                                        ...mapToFirestore(
+                                                                                                                          {
+                                                                                                                            'popularity': FieldValue.increment(1),
+                                                                                                                            'upvoted': FieldValue.arrayUnion([currentUserReference]),
+                                                                                                                          },
+                                                                                                                        ),
+                                                                                                                      });
+                                                                                                                      logFirebaseEvent('ToggleIcon_wait__delay');
+                                                                                                                      await Future.delayed(const Duration(milliseconds: 1200));
+                                                                                                                      logFirebaseEvent('ToggleIcon_set_form_field');
+                                                                                                                      safeSetState(() {
+                                                                                                                        _model.textFieldSearchTextController?.text = _model.textFieldSearchTextController.text;
+                                                                                                                      });
+                                                                                                                    }
+                                                                                                                  } else {
+                                                                                                                    logFirebaseEvent('ToggleIcon_show_snack_bar');
+                                                                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                      SnackBar(
+                                                                                                                        content: Text(
+                                                                                                                          'You must be logged in to vote',
+                                                                                                                          style: TextStyle(
+                                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                          ),
+                                                                                                                        ),
+                                                                                                                        duration: Duration(milliseconds: 4000),
+                                                                                                                        backgroundColor: FlutterFlowTheme.of(context).secondary,
                                                                                                                       ),
                                                                                                                     );
                                                                                                                   }
-
-                                                                                                                  final rowPresentingComplaintsRecord = snapshot.data!;
-
-                                                                                                                  return Row(
-                                                                                                                    mainAxisSize: MainAxisSize.max,
-                                                                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                                                                    children: [
-                                                                                                                      Padding(
-                                                                                                                        padding: EdgeInsets.all(5.0),
-                                                                                                                        child: Text(
-                                                                                                                          matchingTemplatesItem.pc.maybeHandleOverflow(
-                                                                                                                            maxChars: 24,
-                                                                                                                            replacement: '…',
-                                                                                                                          ),
-                                                                                                                          style: FlutterFlowTheme.of(context).titleMedium.override(
-                                                                                                                                fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
-                                                                                                                                letterSpacing: 0.0,
-                                                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
-                                                                                                                              ),
-                                                                                                                        ),
-                                                                                                                      ),
-                                                                                                                      if (matchingTemplatesItem.owner == currentUserReference)
-                                                                                                                        Icon(
-                                                                                                                          Icons.star_rounded,
-                                                                                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                                                                                          size: 24.0,
-                                                                                                                        ),
-                                                                                                                    ],
-                                                                                                                  );
                                                                                                                 },
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          );
-                                                                                                        },
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  if ((matchingTemplatesItem.iNote != null) && (((valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') == '') && (valueOrDefault<bool>(currentUserDocument?.activeMembership, false) == false)) || ((valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') != 'active') && (valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') != 'trialing') && (valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') != ''))))
-                                                                                                    Padding(
-                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 5.0),
-                                                                                                      child: AuthUserStreamWidget(
-                                                                                                        builder: (context) => StreamBuilder<PresentingComplaintsRecord>(
-                                                                                                          stream: PresentingComplaintsRecord.getDocument(matchingTemplatesItem.reference),
-                                                                                                          builder: (context, snapshot) {
-                                                                                                            // Customize what your widget looks like when it's loading.
-                                                                                                            if (!snapshot.hasData) {
-                                                                                                              return Center(
-                                                                                                                child: SizedBox(
-                                                                                                                  width: 50.0,
-                                                                                                                  height: 50.0,
-                                                                                                                  child: SpinKitPulse(
-                                                                                                                    color: FlutterFlowTheme.of(context).primary,
-                                                                                                                    size: 50.0,
-                                                                                                                  ),
+                                                                                                                value: containerResourcesRecord.upvoted.contains(currentUserReference),
+                                                                                                                onIcon: Icon(
+                                                                                                                  Icons.favorite,
+                                                                                                                  color: FlutterFlowTheme.of(context).primary,
+                                                                                                                  size: 25.0,
                                                                                                                 ),
-                                                                                                              );
-                                                                                                            }
-
-                                                                                                            final containerPresentingComplaintsRecord = snapshot.data!;
-
-                                                                                                            return InkWell(
-                                                                                                              splashColor: Colors.transparent,
-                                                                                                              focusColor: Colors.transparent,
-                                                                                                              hoverColor: Colors.transparent,
-                                                                                                              highlightColor: Colors.transparent,
-                                                                                                              onTap: () async {
-                                                                                                                logFirebaseEvent('CONSULT_PAGE_Container_hvf6zymm_ON_TAP');
-                                                                                                                if (matchingTemplatesItem.iNote != null) {
-                                                                                                                  if (valueOrDefault<bool>(currentUserDocument?.activeMembership, false) != true) {
-                                                                                                                    logFirebaseEvent('Container_bottom_sheet');
-                                                                                                                    await showModalBottomSheet(
-                                                                                                                      isScrollControlled: true,
-                                                                                                                      backgroundColor: Colors.transparent,
-                                                                                                                      enableDrag: false,
-                                                                                                                      context: context,
-                                                                                                                      builder: (context) {
-                                                                                                                        return WebViewAware(
-                                                                                                                          child: GestureDetector(
-                                                                                                                            onTap: () {
-                                                                                                                              FocusScope.of(context).unfocus();
-                                                                                                                              FocusManager.instance.primaryFocus?.unfocus();
-                                                                                                                            },
-                                                                                                                            child: Padding(
-                                                                                                                              padding: MediaQuery.viewInsetsOf(context),
-                                                                                                                              child: B96BottomSheetSubscribeWidget(),
-                                                                                                                            ),
-                                                                                                                          ),
-                                                                                                                        );
-                                                                                                                      },
-                                                                                                                    ).then((value) => safeSetState(() {}));
-                                                                                                                  }
-                                                                                                                } else {
-                                                                                                                  logFirebaseEvent('Container_update_app_state');
-                                                                                                                  FFAppState().templateref = containerPresentingComplaintsRecord.reference;
-                                                                                                                  safeSetState(() {});
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldPCTextController?.text = containerPresentingComplaintsRecord.pc;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldHxTextController?.text = containerPresentingComplaintsRecord.history;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldExTextController?.text = containerPresentingComplaintsRecord.exam;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldImTextController?.text = containerPresentingComplaintsRecord.impression;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldPlanTextController?.text = containerPresentingComplaintsRecord.plan;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldNotesTextController?.text = containerPresentingComplaintsRecord.notes;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldTextTextController?.text = containerPresentingComplaintsRecord.textMessage;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldPCSmallTextController?.text = containerPresentingComplaintsRecord.pc;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldHxSmallTextController?.text = containerPresentingComplaintsRecord.history;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldExSmallTextController?.text = containerPresentingComplaintsRecord.exam;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldImSmallTextController?.text = containerPresentingComplaintsRecord.impression;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldPlanSmallTextController?.text = containerPresentingComplaintsRecord.plan;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldNotesSmallTextController?.text = containerPresentingComplaintsRecord.notes;
-                                                                                                                  });
-                                                                                                                  logFirebaseEvent('Container_set_form_field');
-                                                                                                                  safeSetState(() {
-                                                                                                                    _model.textFieldTextSmallTextController?.text = containerPresentingComplaintsRecord.textMessage;
-                                                                                                                  });
-                                                                                                                }
-                                                                                                              },
-                                                                                                              child: Container(
-                                                                                                                width: double.infinity,
-                                                                                                                height: 50.0,
-                                                                                                                decoration: BoxDecoration(
-                                                                                                                  color: Color(0x1F4741FF),
-                                                                                                                  borderRadius: BorderRadius.circular(10.0),
-                                                                                                                ),
-                                                                                                                child: Column(
-                                                                                                                  mainAxisSize: MainAxisSize.max,
-                                                                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                                                                  children: [
-                                                                                                                    Icon(
-                                                                                                                      Icons.lock_outlined,
-                                                                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                                      size: 24.0,
-                                                                                                                    ),
-                                                                                                                    Text(
-                                                                                                                      'ClickNote',
-                                                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                            fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                            color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                                            letterSpacing: 0.0,
-                                                                                                                            fontWeight: FontWeight.bold,
-                                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                                          ),
-                                                                                                                    ),
-                                                                                                                  ],
+                                                                                                                offIcon: Icon(
+                                                                                                                  Icons.favorite_border,
+                                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                  size: 25.0,
                                                                                                                 ),
                                                                                                               ),
-                                                                                                            ).animateOnPageLoad(animationsMap['containerOnPageLoadAnimation']!);
-                                                                                                          },
+                                                                                                              Text(
+                                                                                                                containerResourcesRecord.popularity.toString(),
+                                                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                      fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                                                      letterSpacing: 0.0,
+                                                                                                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                                                                    ),
+                                                                                                              ),
+                                                                                                              SizedBox(
+                                                                                                                height: 100.0,
+                                                                                                                child: VerticalDivider(
+                                                                                                                  thickness: 1.0,
+                                                                                                                  color: FlutterFlowTheme.of(context).accent4,
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
                                                                                                         ),
-                                                                                                      ),
+                                                                                                        Flexible(
+                                                                                                          child: CommunityResourceWidget(
+                                                                                                            key: Key('Keyi35_${resourcesMatchingIndex}_of_${resourcesMatching.length}'),
+                                                                                                            parameter1: containerResourcesRecord.description,
+                                                                                                            parameter2: containerResourcesRecord.link,
+                                                                                                            searchReference: _model.searchReference!,
+                                                                                                            resourceRef: containerResourcesRecord.reference,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ],
                                                                                                     ),
+                                                                                                  ),
                                                                                                 ],
-                                                                                              );
-                                                                                            },
-                                                                                          );
-                                                                                        },
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                              ],
+                                                                                              ),
+                                                                                            );
+                                                                                          },
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  );
+                                                                                },
+                                                                              ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                        onEnter:
-                                                                            ((event) async {
-                                                                          safeSetState(() =>
-                                                                              _model.mouseRegionTemplatesHovered = true);
-                                                                        }),
-                                                                        onExit:
-                                                                            ((event) async {
-                                                                          safeSetState(() =>
-                                                                              _model.mouseRegionTemplatesHovered = false);
-                                                                        }),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child:
-                                                                            MouseRegion(
-                                                                          opaque:
-                                                                              false,
-                                                                          cursor:
-                                                                              MouseCursor.defer ?? MouseCursor.defer,
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisSize:
-                                                                                MainAxisSize.max,
-                                                                            children: [
-                                                                              Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 5.0),
-                                                                                child: Text(
-                                                                                  'Selected template',
-                                                                                  textAlign: TextAlign.center,
-                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                        fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                        color: _model.mouseRegionSelectedTemplateHovered == true ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).accent3,
-                                                                                        letterSpacing: 0.0,
-                                                                                        useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                      ),
-                                                                                ),
-                                                                              ),
-                                                                              Expanded(
-                                                                                child: Container(
-                                                                                  width: MediaQuery.sizeOf(context).width * 0.3,
-                                                                                  decoration: BoxDecoration(
-                                                                                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                                                                                    borderRadius: BorderRadius.circular(10.0),
-                                                                                    border: Border.all(
-                                                                                      color: _model.mouseRegionSelectedTemplateHovered == true ? FlutterFlowTheme.of(context).hover : FlutterFlowTheme.of(context).accent3,
-                                                                                    ),
-                                                                                  ),
-                                                                                  child: Stack(
-                                                                                    children: [
-                                                                                      if ((FFAppState().templateref != null) && (_model.textFieldSearchTextController.text != ''))
-                                                                                        Padding(
-                                                                                          padding: EdgeInsets.all(10.0),
-                                                                                          child: SingleChildScrollView(
-                                                                                            child: Column(
-                                                                                              mainAxisSize: MainAxisSize.min,
-                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                              children: [
-                                                                                                Align(
-                                                                                                  alignment: AlignmentDirectional(0.0, -0.66),
-                                                                                                  child: TextFormField(
-                                                                                                    controller: _model.textFieldPCSmallTextController,
-                                                                                                    focusNode: _model.textFieldPCSmallFocusNode,
-                                                                                                    autofocus: false,
-                                                                                                    readOnly: currentUserEmail == 'jamesjwalker01@gmail.com' ? false : true,
-                                                                                                    obscureText: false,
-                                                                                                    decoration: InputDecoration(
-                                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                            fontSize: 22.0,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      hintStyle: FlutterFlowTheme.of(context).titleMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            decoration: TextDecoration.underline,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
-                                                                                                          ),
-                                                                                                      enabledBorder: InputBorder.none,
-                                                                                                      focusedBorder: InputBorder.none,
-                                                                                                      errorBorder: InputBorder.none,
-                                                                                                      focusedErrorBorder: InputBorder.none,
-                                                                                                    ),
-                                                                                                    style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                                          fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                                                                                                          letterSpacing: 0.0,
-                                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleLargeFamily),
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                    textAlign: TextAlign.center,
-                                                                                                    maxLines: null,
-                                                                                                    validator: _model.textFieldPCSmallTextControllerValidator.asValidator(context),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Padding(
-                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 10.0),
-                                                                                                  child: InkWell(
-                                                                                                    splashColor: Colors.transparent,
-                                                                                                    focusColor: Colors.transparent,
-                                                                                                    hoverColor: Colors.transparent,
-                                                                                                    highlightColor: Colors.transparent,
-                                                                                                    onTap: () async {
-                                                                                                      logFirebaseEvent('CONSULT_PAGE_Row_0k08fssk_ON_TAP');
-                                                                                                      logFirebaseEvent('Row_copy_to_clipboard');
-                                                                                                      await Clipboard.setData(ClipboardData(text: _model.textFieldPlanSmallTextController.text));
-                                                                                                      logFirebaseEvent('Row_show_snack_bar');
-                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                        SnackBar(
-                                                                                                          content: Text(
-                                                                                                            'Text copied!',
-                                                                                                            style: TextStyle(
-                                                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                          duration: Duration(milliseconds: 4000),
-                                                                                                          backgroundColor: FlutterFlowTheme.of(context).secondary,
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                    child: Row(
-                                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Padding(
-                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
-                                                                                                          child: Icon(
-                                                                                                            Icons.content_copy,
-                                                                                                            color: Color(0x5C000000),
-                                                                                                            size: 20.0,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          'Copy ',
-                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                color: Color(0x5C000000),
-                                                                                                                fontSize: 14.0,
-                                                                                                                letterSpacing: 0.0,
-                                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Align(
-                                                                                                  alignment: AlignmentDirectional(0.0, -0.66),
-                                                                                                  child: TextFormField(
-                                                                                                    controller: _model.textFieldPlanSmallTextController,
-                                                                                                    focusNode: _model.textFieldPlanSmallFocusNode,
-                                                                                                    autofocus: true,
-                                                                                                    obscureText: false,
-                                                                                                    decoration: InputDecoration(
-                                                                                                      labelText: 'Plan',
-                                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            fontSize: 22.0,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      errorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedErrorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                          letterSpacing: 0.0,
-                                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                    maxLines: null,
-                                                                                                    validator: _model.textFieldPlanSmallTextControllerValidator.asValidator(context),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Padding(
-                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 10.0),
-                                                                                                  child: InkWell(
-                                                                                                    splashColor: Colors.transparent,
-                                                                                                    focusColor: Colors.transparent,
-                                                                                                    hoverColor: Colors.transparent,
-                                                                                                    highlightColor: Colors.transparent,
-                                                                                                    onTap: () async {
-                                                                                                      logFirebaseEvent('CONSULT_PAGE_Row_tzxp5s51_ON_TAP');
-                                                                                                      logFirebaseEvent('Row_copy_to_clipboard');
-                                                                                                      await Clipboard.setData(ClipboardData(text: _model.textFieldNotesSmallTextController.text));
-                                                                                                      logFirebaseEvent('Row_show_snack_bar');
-                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                        SnackBar(
-                                                                                                          content: Text(
-                                                                                                            'Text copied!',
-                                                                                                            style: TextStyle(
-                                                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                          duration: Duration(milliseconds: 4000),
-                                                                                                          backgroundColor: FlutterFlowTheme.of(context).secondary,
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                    child: Row(
-                                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Padding(
-                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
-                                                                                                          child: Icon(
-                                                                                                            Icons.content_copy,
-                                                                                                            color: Color(0x5C000000),
-                                                                                                            size: 20.0,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          'Copy ',
-                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                color: Color(0x5C000000),
-                                                                                                                fontSize: 14.0,
-                                                                                                                letterSpacing: 0.0,
-                                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Align(
-                                                                                                  alignment: AlignmentDirectional(0.0, -0.66),
-                                                                                                  child: TextFormField(
-                                                                                                    controller: _model.textFieldNotesSmallTextController,
-                                                                                                    focusNode: _model.textFieldNotesSmallFocusNode,
-                                                                                                    autofocus: true,
-                                                                                                    obscureText: false,
-                                                                                                    decoration: InputDecoration(
-                                                                                                      labelText: 'Safety-netting',
-                                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            fontSize: 22.0,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      errorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedErrorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                          letterSpacing: 0.0,
-                                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                    maxLines: null,
-                                                                                                    validator: _model.textFieldNotesSmallTextControllerValidator.asValidator(context),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Padding(
-                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 10.0),
-                                                                                                  child: InkWell(
-                                                                                                    splashColor: Colors.transparent,
-                                                                                                    focusColor: Colors.transparent,
-                                                                                                    hoverColor: Colors.transparent,
-                                                                                                    highlightColor: Colors.transparent,
-                                                                                                    onTap: () async {
-                                                                                                      logFirebaseEvent('CONSULT_PAGE_Row_efeulomj_ON_TAP');
-                                                                                                      logFirebaseEvent('Row_copy_to_clipboard');
-                                                                                                      await Clipboard.setData(ClipboardData(text: _model.textFieldTextSmallTextController.text));
-                                                                                                      logFirebaseEvent('Row_show_snack_bar');
-                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                        SnackBar(
-                                                                                                          content: Text(
-                                                                                                            'Text copied!',
-                                                                                                            style: TextStyle(
-                                                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                          duration: Duration(milliseconds: 4000),
-                                                                                                          backgroundColor: FlutterFlowTheme.of(context).secondary,
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                    child: Row(
-                                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Padding(
-                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
-                                                                                                          child: Icon(
-                                                                                                            Icons.content_copy,
-                                                                                                            color: Color(0x5C000000),
-                                                                                                            size: 20.0,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          'Copy ',
-                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                color: Color(0x5C000000),
-                                                                                                                fontSize: 14.0,
-                                                                                                                letterSpacing: 0.0,
-                                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Align(
-                                                                                                  alignment: AlignmentDirectional(0.0, -0.66),
-                                                                                                  child: TextFormField(
-                                                                                                    controller: _model.textFieldTextSmallTextController,
-                                                                                                    focusNode: _model.textFieldTextSmallFocusNode,
-                                                                                                    autofocus: true,
-                                                                                                    obscureText: false,
-                                                                                                    decoration: InputDecoration(
-                                                                                                      labelText: 'Text message',
-                                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            fontSize: 22.0,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      errorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedErrorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                          letterSpacing: 0.0,
-                                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                    maxLines: null,
-                                                                                                    validator: _model.textFieldTextSmallTextControllerValidator.asValidator(context),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Divider(
-                                                                                                  height: 60.0,
-                                                                                                  thickness: 1.0,
-                                                                                                  indent: 10.0,
-                                                                                                  endIndent: 10.0,
-                                                                                                  color: FlutterFlowTheme.of(context).accent3,
-                                                                                                ),
-                                                                                                Padding(
-                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 10.0),
-                                                                                                  child: InkWell(
-                                                                                                    splashColor: Colors.transparent,
-                                                                                                    focusColor: Colors.transparent,
-                                                                                                    hoverColor: Colors.transparent,
-                                                                                                    highlightColor: Colors.transparent,
-                                                                                                    onTap: () async {
-                                                                                                      logFirebaseEvent('CONSULT_PAGE_Row_0uggjxjy_ON_TAP');
-                                                                                                      logFirebaseEvent('Row_copy_to_clipboard');
-                                                                                                      await Clipboard.setData(ClipboardData(text: _model.textFieldHxSmallTextController.text));
-                                                                                                      logFirebaseEvent('Row_show_snack_bar');
-                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                        SnackBar(
-                                                                                                          content: Text(
-                                                                                                            'Text copied!',
-                                                                                                            style: TextStyle(
-                                                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                          duration: Duration(milliseconds: 4000),
-                                                                                                          backgroundColor: FlutterFlowTheme.of(context).secondary,
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                    child: Row(
-                                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Padding(
-                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
-                                                                                                          child: Icon(
-                                                                                                            Icons.content_copy,
-                                                                                                            color: Color(0x5C000000),
-                                                                                                            size: 20.0,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          'Copy ',
-                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                color: Color(0x5C000000),
-                                                                                                                fontSize: 14.0,
-                                                                                                                letterSpacing: 0.0,
-                                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Align(
-                                                                                                  alignment: AlignmentDirectional(0.0, -0.66),
-                                                                                                  child: TextFormField(
-                                                                                                    controller: _model.textFieldHxSmallTextController,
-                                                                                                    focusNode: _model.textFieldHxSmallFocusNode,
-                                                                                                    autofocus: true,
-                                                                                                    obscureText: false,
-                                                                                                    decoration: InputDecoration(
-                                                                                                      labelText: 'History',
-                                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            fontSize: 22.0,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      errorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedErrorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                          letterSpacing: 0.0,
-                                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                    maxLines: null,
-                                                                                                    validator: _model.textFieldHxSmallTextControllerValidator.asValidator(context),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Padding(
-                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 10.0),
-                                                                                                  child: InkWell(
-                                                                                                    splashColor: Colors.transparent,
-                                                                                                    focusColor: Colors.transparent,
-                                                                                                    hoverColor: Colors.transparent,
-                                                                                                    highlightColor: Colors.transparent,
-                                                                                                    onTap: () async {
-                                                                                                      logFirebaseEvent('CONSULT_PAGE_Row_7e1zfepr_ON_TAP');
-                                                                                                      logFirebaseEvent('Row_copy_to_clipboard');
-                                                                                                      await Clipboard.setData(ClipboardData(text: _model.textFieldExSmallTextController.text));
-                                                                                                      logFirebaseEvent('Row_show_snack_bar');
-                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                        SnackBar(
-                                                                                                          content: Text(
-                                                                                                            'Text copied!',
-                                                                                                            style: TextStyle(
-                                                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                          duration: Duration(milliseconds: 4000),
-                                                                                                          backgroundColor: FlutterFlowTheme.of(context).secondary,
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                    child: Row(
-                                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Padding(
-                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
-                                                                                                          child: Icon(
-                                                                                                            Icons.content_copy,
-                                                                                                            color: Color(0x5C000000),
-                                                                                                            size: 20.0,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          'Copy ',
-                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                color: Color(0x5C000000),
-                                                                                                                fontSize: 14.0,
-                                                                                                                letterSpacing: 0.0,
-                                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Align(
-                                                                                                  alignment: AlignmentDirectional(0.0, -0.66),
-                                                                                                  child: TextFormField(
-                                                                                                    controller: _model.textFieldExSmallTextController,
-                                                                                                    focusNode: _model.textFieldExSmallFocusNode,
-                                                                                                    autofocus: true,
-                                                                                                    obscureText: false,
-                                                                                                    decoration: InputDecoration(
-                                                                                                      labelText: 'Examination',
-                                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            fontSize: 22.0,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      errorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedErrorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                          letterSpacing: 0.0,
-                                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                    maxLines: null,
-                                                                                                    validator: _model.textFieldExSmallTextControllerValidator.asValidator(context),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Padding(
-                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 10.0),
-                                                                                                  child: InkWell(
-                                                                                                    splashColor: Colors.transparent,
-                                                                                                    focusColor: Colors.transparent,
-                                                                                                    hoverColor: Colors.transparent,
-                                                                                                    highlightColor: Colors.transparent,
-                                                                                                    onTap: () async {
-                                                                                                      logFirebaseEvent('CONSULT_PAGE_Row_f26k7w93_ON_TAP');
-                                                                                                      logFirebaseEvent('Row_copy_to_clipboard');
-                                                                                                      await Clipboard.setData(ClipboardData(text: _model.textFieldImSmallTextController.text));
-                                                                                                      logFirebaseEvent('Row_show_snack_bar');
-                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                        SnackBar(
-                                                                                                          content: Text(
-                                                                                                            'Text copied!',
-                                                                                                            style: TextStyle(
-                                                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                          duration: Duration(milliseconds: 4000),
-                                                                                                          backgroundColor: FlutterFlowTheme.of(context).secondary,
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                    child: Row(
-                                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Padding(
-                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
-                                                                                                          child: Icon(
-                                                                                                            Icons.content_copy,
-                                                                                                            color: Color(0x5C000000),
-                                                                                                            size: 20.0,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          'Copy ',
-                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                color: Color(0x5C000000),
-                                                                                                                fontSize: 14.0,
-                                                                                                                letterSpacing: 0.0,
-                                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Align(
-                                                                                                  alignment: AlignmentDirectional(0.0, -0.66),
-                                                                                                  child: TextFormField(
-                                                                                                    controller: _model.textFieldImSmallTextController,
-                                                                                                    focusNode: _model.textFieldImSmallFocusNode,
-                                                                                                    autofocus: true,
-                                                                                                    obscureText: false,
-                                                                                                    decoration: InputDecoration(
-                                                                                                      labelText: 'Impression',
-                                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                            fontSize: 22.0,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                                            letterSpacing: 0.0,
-                                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
-                                                                                                          ),
-                                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      errorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                      focusedErrorBorder: OutlineInputBorder(
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: FlutterFlowTheme.of(context).error,
-                                                                                                          width: 2.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                          letterSpacing: 0.0,
-                                                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                    maxLines: null,
-                                                                                                    validator: _model.textFieldImSmallTextControllerValidator.asValidator(context),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                if ((currentUserEmail == 'jamesjwalker01@gmail.com') || (currentUserEmail == 'therealcatmimi@gmail.com') || (currentUserEmail == 'roseshendi@gmail.com'))
-                                                                                                  Padding(
-                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 55.0, 0.0, 0.0),
-                                                                                                    child: FFButtonWidget(
-                                                                                                      onPressed: () async {
-                                                                                                        logFirebaseEvent('CONSULT_PAGE_UPDATE_BTN_ON_TAP');
-                                                                                                        logFirebaseEvent('Button_backend_call');
-
-                                                                                                        await FFAppState().templateref!.update(createPresentingComplaintsRecordData(
-                                                                                                              history: _model.textFieldHxSmallTextController.text,
-                                                                                                              exam: _model.textFieldExSmallTextController.text,
-                                                                                                              impression: _model.textFieldImSmallTextController.text,
-                                                                                                              plan: _model.textFieldPlanSmallTextController.text,
-                                                                                                              pc: _model.textFieldPCSmallTextController.text,
-                                                                                                              notes: _model.textFieldNotesSmallTextController.text,
-                                                                                                              textMessage: _model.textFieldTextSmallTextController.text,
-                                                                                                            ));
-                                                                                                      },
-                                                                                                      text: 'Update',
-                                                                                                      options: FFButtonOptions(
-                                                                                                        height: 28.16,
-                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                                                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                                                                                        color: FlutterFlowTheme.of(context).primary,
-                                                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                                              fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
-                                                                                                              color: Colors.white,
-                                                                                                              letterSpacing: 0.0,
-                                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleSmallFamily),
-                                                                                                            ),
-                                                                                                        elevation: 3.0,
-                                                                                                        borderSide: BorderSide(
-                                                                                                          color: Colors.transparent,
-                                                                                                          width: 1.0,
-                                                                                                        ),
-                                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ).animateOnActionTrigger(
-                                                                                            animationsMap['columnOnActionTriggerAnimation']!,
-                                                                                          ),
-                                                                                        ),
-                                                                                      if ((FFAppState().templateref == null) || (_model.textFieldSearchTextController.text == ''))
-                                                                                        wrapWithModel(
-                                                                                          model: _model.placeholderStaticTemplateModel,
-                                                                                          updateCallback: () => safeSetState(() {}),
-                                                                                          child: PlaceholderStaticTemplateWidget(),
-                                                                                        ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ],
+                                                                        if (FFAppState().searchTerm ==
+                                                                            false)
+                                                                          wrapWithModel(
+                                                                            model:
+                                                                                _model.placeholderCommunityResourcesModel,
+                                                                            updateCallback: () =>
+                                                                                safeSetState(() {}),
+                                                                            child:
+                                                                                PlaceholderCommunityResourcesWidget(),
                                                                           ),
-                                                                          onEnter:
-                                                                              ((event) async {
-                                                                            safeSetState(() =>
-                                                                                _model.mouseRegionSelectedTemplateHovered = true);
-                                                                          }),
-                                                                          onExit:
-                                                                              ((event) async {
-                                                                            safeSetState(() =>
-                                                                                _model.mouseRegionSelectedTemplateHovered = false);
-                                                                          }),
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                                                      ],
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                ],
+                                                              ),
+                                                              onEnter:
+                                                                  ((event) async {
+                                                                safeSetState(() =>
+                                                                    _model.mouseRegionUserUploadedResourcesHovered =
+                                                                        true);
+                                                              }),
+                                                              onExit:
+                                                                  ((event) async {
+                                                                safeSetState(() =>
+                                                                    _model.mouseRegionUserUploadedResourcesHovered =
+                                                                        false);
+                                                              }),
                                                             ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    20.0,
-                                                                    0.0),
-                                                        child: MouseRegion(
-                                                          opaque: false,
-                                                          cursor: MouseCursor
-                                                                  .defer ??
-                                                              MouseCursor.defer,
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Row(
+                                                            MouseRegion(
+                                                              opaque: false,
+                                                              cursor: MouseCursor
+                                                                      .defer ??
+                                                                  MouseCursor
+                                                                      .defer,
+                                                              child: Row(
                                                                 mainAxisSize:
                                                                     MainAxisSize
                                                                         .max,
@@ -5607,7 +4525,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                             0.0,
                                                                             5.0),
                                                                     child: Text(
-                                                                      'Resources uploaded by users',
+                                                                      'Safety-netting templates',
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,
@@ -5617,9 +4535,9 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                           .override(
                                                                             fontFamily:
                                                                                 FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                            color: _model.mouseRegionCommunityHovered == true
+                                                                            color: (_model.mouseRegionTemplatesHeaderHovered == true) || (_model.mouseRegionTemplatesHovered == true)
                                                                                 ? FlutterFlowTheme.of(context).hover
-                                                                                : FlutterFlowTheme.of(context).accent3,
+                                                                                : FlutterFlowTheme.of(context).secondaryText,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             useGoogleFonts:
@@ -5627,9 +4545,10 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                           ),
                                                                     ),
                                                                   ),
-                                                                  if (_model
-                                                                          .mouseRegionCommunityHovered ==
-                                                                      true)
+                                                                  if ((_model.mouseRegionTemplatesHeaderHovered ==
+                                                                          true) ||
+                                                                      (_model.mouseRegionTemplatesHovered ==
+                                                                          true))
                                                                     Padding(
                                                                       padding: EdgeInsetsDirectional.fromSTEB(
                                                                           5.0,
@@ -5637,101 +4556,104 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                           0.0,
                                                                           0.0),
                                                                       child:
-                                                                          AlignedTooltip(
-                                                                        content:
-                                                                            Padding(
-                                                                          padding:
-                                                                              EdgeInsets.all(4.0),
-                                                                          child:
-                                                                              Text(
-                                                                            'Submit a useful resource for others to see',
-                                                                            style: FlutterFlowTheme.of(context).bodyLarge.override(
-                                                                                  fontFamily: FlutterFlowTheme.of(context).bodyLargeFamily,
-                                                                                  fontSize: 14.0,
-                                                                                  letterSpacing: 0.0,
-                                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyLargeFamily),
-                                                                                ),
+                                                                          FFButtonWidget(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          logFirebaseEvent(
+                                                                              'CONSULT_PAGE_VIEW_ALL_BTN_ON_TAP');
+                                                                          if (FFAppState().templateView ==
+                                                                              false) {
+                                                                            if (_model.textFieldSearchTextController.text !=
+                                                                                '') {
+                                                                              logFirebaseEvent('Button_update_app_state');
+                                                                              FFAppState().templateView = true;
+                                                                              safeSetState(() {});
+                                                                            } else {
+                                                                              logFirebaseEvent('Button_update_app_state');
+                                                                              FFAppState().templateView = true;
+                                                                              FFAppState().templateref = null;
+                                                                              safeSetState(() {});
+                                                                            }
+                                                                          } else {
+                                                                            logFirebaseEvent('Button_update_app_state');
+                                                                            FFAppState().templateView =
+                                                                                false;
+                                                                            safeSetState(() {});
+                                                                          }
+                                                                        },
+                                                                        text:
+                                                                            'View all',
+                                                                        options:
+                                                                            FFButtonOptions(
+                                                                          width:
+                                                                              70.0,
+                                                                          height:
+                                                                              20.0,
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          textStyle: FlutterFlowTheme.of(context)
+                                                                              .titleSmall
+                                                                              .override(
+                                                                                fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
+                                                                                color: Colors.white,
+                                                                                fontSize: 14.0,
+                                                                                letterSpacing: 0.0,
+                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleSmallFamily),
+                                                                              ),
+                                                                          elevation:
+                                                                              3.0,
+                                                                          borderSide:
+                                                                              BorderSide(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            width:
+                                                                                1.0,
                                                                           ),
-                                                                        ),
-                                                                        offset:
-                                                                            4.0,
-                                                                        preferredDirection:
-                                                                            AxisDirection.down,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(8.0),
-                                                                        backgroundColor:
-                                                                            FlutterFlowTheme.of(context).secondaryBackground,
-                                                                        elevation:
-                                                                            4.0,
-                                                                        tailBaseWidth:
-                                                                            24.0,
-                                                                        tailLength:
-                                                                            12.0,
-                                                                        waitDuration:
-                                                                            Duration(milliseconds: 0),
-                                                                        showDuration:
-                                                                            Duration(milliseconds: 0),
-                                                                        triggerMode:
-                                                                            TooltipTriggerMode.tap,
-                                                                        child:
-                                                                            InkWell(
-                                                                          splashColor:
-                                                                              Colors.transparent,
-                                                                          focusColor:
-                                                                              Colors.transparent,
-                                                                          hoverColor:
-                                                                              Colors.transparent,
-                                                                          highlightColor:
-                                                                              Colors.transparent,
-                                                                          onTap:
-                                                                              () async {
-                                                                            logFirebaseEvent('CONSULT_PAGE_Icon_5jp59n9t_ON_TAP');
-                                                                            logFirebaseEvent('Icon_bottom_sheet');
-                                                                            await showModalBottomSheet(
-                                                                              isScrollControlled: true,
-                                                                              backgroundColor: Colors.transparent,
-                                                                              enableDrag: false,
-                                                                              context: context,
-                                                                              builder: (context) {
-                                                                                return WebViewAware(
-                                                                                  child: GestureDetector(
-                                                                                    onTap: () {
-                                                                                      FocusScope.of(context).unfocus();
-                                                                                      FocusManager.instance.primaryFocus?.unfocus();
-                                                                                    },
-                                                                                    child: Padding(
-                                                                                      padding: MediaQuery.viewInsetsOf(context),
-                                                                                      child: AddResourceWidget(),
-                                                                                    ),
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                            ).then((value) =>
-                                                                                safeSetState(() {}));
-                                                                          },
-                                                                          child:
-                                                                              Icon(
-                                                                            Icons.add_box,
-                                                                            color: _model.mouseRegionCommunityHovered == true
-                                                                                ? FlutterFlowTheme.of(context).hover
-                                                                                : FlutterFlowTheme.of(context).accent3,
-                                                                            size:
-                                                                                20.0,
-                                                                          ),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
                                                                         ),
                                                                       ),
                                                                     ),
                                                                 ],
                                                               ),
-                                                              Container(
+                                                              onEnter:
+                                                                  ((event) async {
+                                                                safeSetState(() =>
+                                                                    _model.mouseRegionTemplatesHeaderHovered =
+                                                                        true);
+                                                              }),
+                                                              onExit:
+                                                                  ((event) async {
+                                                                safeSetState(() =>
+                                                                    _model.mouseRegionTemplatesHeaderHovered =
+                                                                        false);
+                                                              }),
+                                                            ),
+                                                            MouseRegion(
+                                                              opaque: false,
+                                                              cursor: MouseCursor
+                                                                      .defer ??
+                                                                  MouseCursor
+                                                                      .defer,
+                                                              child: Container(
                                                                 width: MediaQuery.sizeOf(
                                                                             context)
                                                                         .width *
-                                                                    0.33,
+                                                                    0.35,
                                                                 height: MediaQuery.sizeOf(
                                                                             context)
                                                                         .height *
-                                                                    0.63,
+                                                                    0.34,
                                                                 decoration:
                                                                     BoxDecoration(
                                                                   color: FlutterFlowTheme.of(
@@ -5743,258 +4665,620 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                               10.0),
                                                                   border: Border
                                                                       .all(
-                                                                    color: _model.mouseRegionCommunityHovered ==
-                                                                            true
+                                                                    color: (_model.mouseRegionTemplatesHeaderHovered ==
+                                                                                true) ||
+                                                                            (_model.mouseRegionTemplatesHovered ==
+                                                                                true)
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
                                                                         : FlutterFlowTheme.of(context)
                                                                             .accent3,
                                                                   ),
                                                                 ),
-                                                                child: Stack(
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
                                                                   children: [
-                                                                    if (FFAppState()
-                                                                            .searchTerm ==
-                                                                        true)
-                                                                      Align(
-                                                                        alignment: AlignmentDirectional(
-                                                                            0.0,
+                                                                    Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              0.0,
+                                                                              -1.0),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            10.0,
+                                                                            10.0,
+                                                                            10.0,
                                                                             0.0),
                                                                         child:
-                                                                            Padding(
-                                                                          padding: EdgeInsetsDirectional.fromSTEB(
-                                                                              0.0,
-                                                                              0.0,
-                                                                              0.0,
-                                                                              10.0),
+                                                                            Container(
+                                                                          constraints:
+                                                                              BoxConstraints(
+                                                                            maxHeight:
+                                                                                MediaQuery.sizeOf(context).height * 0.1,
+                                                                          ),
+                                                                          decoration:
+                                                                              BoxDecoration(),
                                                                           child:
-                                                                              Builder(
-                                                                            builder:
-                                                                                (context) {
-                                                                              if (_model.algoliaSearchResults2?.where((e) => e.popularity >= 1).toList() == null) {
-                                                                                return Center(
-                                                                                  child: SizedBox(
-                                                                                    width: 50.0,
-                                                                                    height: 50.0,
-                                                                                    child: SpinKitPulse(
-                                                                                      color: FlutterFlowTheme.of(context).primary,
-                                                                                      size: 50.0,
+                                                                              Visibility(
+                                                                            visible:
+                                                                                FFAppState().searchTerm == true,
+                                                                            child:
+                                                                                Builder(
+                                                                              builder: (context) {
+                                                                                if (_model.algoliaSearchResults1?.where((e) => e.hasIsSafetyNet() == true).toList() == null) {
+                                                                                  return Center(
+                                                                                    child: SizedBox(
+                                                                                      width: 50.0,
+                                                                                      height: 50.0,
+                                                                                      child: SpinKitPulse(
+                                                                                        color: FlutterFlowTheme.of(context).primary,
+                                                                                        size: 50.0,
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                                );
-                                                                              }
-                                                                              final resourcesMatching = _model.algoliaSearchResults2?.where((e) => e.popularity >= 1).toList().toList() ?? [];
-                                                                              if (resourcesMatching.isEmpty) {
-                                                                                return PlaceholderCommunityResourcesWidget();
-                                                                              }
+                                                                                  );
+                                                                                }
+                                                                                final matchingTemplates = _model.algoliaSearchResults1?.where((e) => e.hasIsSafetyNet() == true).toList().toList() ?? [];
 
-                                                                              return ListView.builder(
-                                                                                padding: EdgeInsets.zero,
-                                                                                scrollDirection: Axis.vertical,
-                                                                                itemCount: resourcesMatching.length,
-                                                                                itemBuilder: (context, resourcesMatchingIndex) {
-                                                                                  final resourcesMatchingItem = resourcesMatching[resourcesMatchingIndex];
-                                                                                  return Padding(
-                                                                                    padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
-                                                                                    child: StreamBuilder<ResourcesRecord>(
-                                                                                      stream: ResourcesRecord.getDocument(resourcesMatchingItem.reference),
-                                                                                      builder: (context, snapshot) {
-                                                                                        // Customize what your widget looks like when it's loading.
-                                                                                        if (!snapshot.hasData) {
-                                                                                          return Center(
-                                                                                            child: SizedBox(
-                                                                                              width: 50.0,
-                                                                                              height: 50.0,
-                                                                                              child: SpinKitPulse(
-                                                                                                color: FlutterFlowTheme.of(context).primary,
-                                                                                                size: 50.0,
-                                                                                              ),
+                                                                                return ListView.builder(
+                                                                                  padding: EdgeInsets.zero,
+                                                                                  scrollDirection: Axis.vertical,
+                                                                                  itemCount: matchingTemplates.length,
+                                                                                  itemBuilder: (context, matchingTemplatesIndex) {
+                                                                                    final matchingTemplatesItem = matchingTemplates[matchingTemplatesIndex];
+                                                                                    return Stack(
+                                                                                      children: [
+                                                                                        if ((matchingTemplatesItem.owner == null) || (matchingTemplatesItem.owner == currentUserReference) || (matchingTemplatesItem.owner?.id == '0w0BR7jueRep4nH4D0vt9oY1JAX2'))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 5.0),
+                                                                                            child: StreamBuilder<PresentingComplaintsRecord>(
+                                                                                              stream: PresentingComplaintsRecord.getDocument(matchingTemplatesItem.reference),
+                                                                                              builder: (context, snapshot) {
+                                                                                                // Customize what your widget looks like when it's loading.
+                                                                                                if (!snapshot.hasData) {
+                                                                                                  return Center(
+                                                                                                    child: SizedBox(
+                                                                                                      width: 50.0,
+                                                                                                      height: 50.0,
+                                                                                                      child: SpinKitPulse(
+                                                                                                        color: FlutterFlowTheme.of(context).primary,
+                                                                                                        size: 50.0,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  );
+                                                                                                }
+
+                                                                                                final containerPresentingComplaintsRecord = snapshot.data!;
+
+                                                                                                return InkWell(
+                                                                                                  splashColor: Colors.transparent,
+                                                                                                  focusColor: Colors.transparent,
+                                                                                                  hoverColor: Colors.transparent,
+                                                                                                  highlightColor: Colors.transparent,
+                                                                                                  onTap: () async {
+                                                                                                    logFirebaseEvent('CONSULT_PAGE_Container_0ejx4voj_ON_TAP');
+                                                                                                    logFirebaseEvent('Container_update_app_state');
+                                                                                                    FFAppState().templateref = containerPresentingComplaintsRecord.reference;
+                                                                                                    safeSetState(() {});
+                                                                                                    logFirebaseEvent('Container_update_page_state');
+                                                                                                    _model.templateSelected = containerPresentingComplaintsRecord.pc;
+                                                                                                    safeSetState(() {});
+                                                                                                    logFirebaseEvent('Container_set_form_field');
+                                                                                                    safeSetState(() {
+                                                                                                      _model.textFieldSafetyNetSmallTextController?.text = containerPresentingComplaintsRecord.notes;
+                                                                                                    });
+                                                                                                    logFirebaseEvent('Container_set_form_field');
+                                                                                                    safeSetState(() {
+                                                                                                      _model.textFieldTextSmallTextController?.text = containerPresentingComplaintsRecord.textMessage;
+                                                                                                    });
+                                                                                                  },
+                                                                                                  child: Container(
+                                                                                                    width: double.infinity,
+                                                                                                    height: 40.0,
+                                                                                                    decoration: BoxDecoration(
+                                                                                                      color: FlutterFlowTheme.of(context).primaryBackground,
+                                                                                                      borderRadius: BorderRadius.circular(10.0),
+                                                                                                      border: Border.all(
+                                                                                                        color: containerPresentingComplaintsRecord.pc == _model.templateSelected ? FlutterFlowTheme.of(context).accent3 : Color(0x00000000),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    child: StreamBuilder<PresentingComplaintsRecord>(
+                                                                                                      stream: PresentingComplaintsRecord.getDocument(containerPresentingComplaintsRecord.reference),
+                                                                                                      builder: (context, snapshot) {
+                                                                                                        // Customize what your widget looks like when it's loading.
+                                                                                                        if (!snapshot.hasData) {
+                                                                                                          return Center(
+                                                                                                            child: SizedBox(
+                                                                                                              width: 50.0,
+                                                                                                              height: 50.0,
+                                                                                                              child: SpinKitPulse(
+                                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                                size: 50.0,
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        }
+
+                                                                                                        final rowPresentingComplaintsRecord = snapshot.data!;
+
+                                                                                                        return Row(
+                                                                                                          mainAxisSize: MainAxisSize.max,
+                                                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                          children: [
+                                                                                                            Padding(
+                                                                                                              padding: EdgeInsets.all(5.0),
+                                                                                                              child: Text(
+                                                                                                                matchingTemplatesItem.pc.maybeHandleOverflow(
+                                                                                                                  maxChars: 24,
+                                                                                                                  replacement: '…',
+                                                                                                                ),
+                                                                                                                style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                                                      fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                                                                                                                      letterSpacing: 0.0,
+                                                                                                                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
+                                                                                                                    ),
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                            if (matchingTemplatesItem.owner == currentUserReference)
+                                                                                                              Icon(
+                                                                                                                Icons.star_rounded,
+                                                                                                                color: FlutterFlowTheme.of(context).alternate,
+                                                                                                                size: 24.0,
+                                                                                                              ),
+                                                                                                          ],
+                                                                                                        );
+                                                                                                      },
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                );
+                                                                                              },
                                                                                             ),
-                                                                                          );
-                                                                                        }
-
-                                                                                        final containerResourcesRecord = snapshot.data!;
-
-                                                                                        return Container(
-                                                                                          width: double.infinity,
-                                                                                          height: 110.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            color: FlutterFlowTheme.of(context).primaryBackground,
-                                                                                            borderRadius: BorderRadius.circular(10.0),
                                                                                           ),
-                                                                                          child: Column(
-                                                                                            mainAxisSize: MainAxisSize.max,
-                                                                                            children: [
-                                                                                              Padding(
-                                                                                                padding: EdgeInsets.all(5.0),
-                                                                                                child: Row(
-                                                                                                  mainAxisSize: MainAxisSize.min,
-                                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                                  children: [
-                                                                                                    Expanded(
-                                                                                                      child: Row(
-                                                                                                        mainAxisSize: MainAxisSize.min,
-                                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                                        children: [
-                                                                                                          Container(
-                                                                                                            width: 100.0,
-                                                                                                            height: 50.0,
-                                                                                                            decoration: BoxDecoration(
-                                                                                                              color: FlutterFlowTheme.of(context).primaryBackground,
-                                                                                                            ),
-                                                                                                            child: Row(
-                                                                                                              mainAxisSize: MainAxisSize.min,
-                                                                                                              children: [
-                                                                                                                ToggleIcon(
-                                                                                                                  onPressed: () async {
-                                                                                                                    final upvotedElement = currentUserReference;
-                                                                                                                    final upvotedUpdate = containerResourcesRecord.upvoted.contains(upvotedElement) ? FieldValue.arrayRemove([upvotedElement]) : FieldValue.arrayUnion([upvotedElement]);
-                                                                                                                    await containerResourcesRecord.reference.update({
-                                                                                                                      ...mapToFirestore(
-                                                                                                                        {
-                                                                                                                          'upvoted': upvotedUpdate,
-                                                                                                                        },
-                                                                                                                      ),
-                                                                                                                    });
-                                                                                                                    logFirebaseEvent('CONSULT_ToggleIcon_eriiacgs_ON_TOGGLE');
-                                                                                                                    if (loggedIn) {
-                                                                                                                      if (containerResourcesRecord.upvoted.contains(currentUserReference)) {
-                                                                                                                        logFirebaseEvent('ToggleIcon_backend_call');
+                                                                                        if ((matchingTemplatesItem.iNote != null) && (((valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') == '') && (valueOrDefault<bool>(currentUserDocument?.activeMembership, false) == false)) || ((valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') != 'active') && (valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') != 'trialing') && (valueOrDefault(currentUserDocument?.stripeSubscriptionStatus, '') != ''))))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 5.0),
+                                                                                            child: AuthUserStreamWidget(
+                                                                                              builder: (context) => StreamBuilder<PresentingComplaintsRecord>(
+                                                                                                stream: PresentingComplaintsRecord.getDocument(matchingTemplatesItem.reference),
+                                                                                                builder: (context, snapshot) {
+                                                                                                  // Customize what your widget looks like when it's loading.
+                                                                                                  if (!snapshot.hasData) {
+                                                                                                    return Center(
+                                                                                                      child: SizedBox(
+                                                                                                        width: 50.0,
+                                                                                                        height: 50.0,
+                                                                                                        child: SpinKitPulse(
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          size: 50.0,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    );
+                                                                                                  }
 
-                                                                                                                        await containerResourcesRecord.reference.update({
-                                                                                                                          ...mapToFirestore(
-                                                                                                                            {
-                                                                                                                              'popularity': FieldValue.increment(-(1)),
-                                                                                                                              'upvoted': FieldValue.arrayRemove([currentUserReference]),
-                                                                                                                            },
-                                                                                                                          ),
-                                                                                                                        });
-                                                                                                                        logFirebaseEvent('ToggleIcon_wait__delay');
-                                                                                                                        await Future.delayed(const Duration(milliseconds: 1200));
-                                                                                                                        logFirebaseEvent('ToggleIcon_set_form_field');
-                                                                                                                        safeSetState(() {
-                                                                                                                          _model.textFieldSearchTextController?.text = _model.textFieldSearchTextController.text;
-                                                                                                                        });
-                                                                                                                      } else {
-                                                                                                                        logFirebaseEvent('ToggleIcon_backend_call');
+                                                                                                  final containerPresentingComplaintsRecord = snapshot.data!;
 
-                                                                                                                        await containerResourcesRecord.reference.update({
-                                                                                                                          ...mapToFirestore(
-                                                                                                                            {
-                                                                                                                              'popularity': FieldValue.increment(1),
-                                                                                                                              'upvoted': FieldValue.arrayUnion([currentUserReference]),
-                                                                                                                            },
-                                                                                                                          ),
-                                                                                                                        });
-                                                                                                                        logFirebaseEvent('ToggleIcon_wait__delay');
-                                                                                                                        await Future.delayed(const Duration(milliseconds: 1200));
-                                                                                                                        logFirebaseEvent('ToggleIcon_set_form_field');
-                                                                                                                        safeSetState(() {
-                                                                                                                          _model.textFieldSearchTextController?.text = _model.textFieldSearchTextController.text;
-                                                                                                                        });
-                                                                                                                      }
-                                                                                                                    } else {
-                                                                                                                      logFirebaseEvent('ToggleIcon_show_snack_bar');
-                                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                                        SnackBar(
-                                                                                                                          content: Text(
-                                                                                                                            'You must be logged in to vote',
-                                                                                                                            style: TextStyle(
-                                                                                                                              color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                                            ),
-                                                                                                                          ),
-                                                                                                                          duration: Duration(milliseconds: 4000),
-                                                                                                                          backgroundColor: FlutterFlowTheme.of(context).secondary,
-                                                                                                                        ),
-                                                                                                                      );
-                                                                                                                    }
+                                                                                                  return InkWell(
+                                                                                                    splashColor: Colors.transparent,
+                                                                                                    focusColor: Colors.transparent,
+                                                                                                    hoverColor: Colors.transparent,
+                                                                                                    highlightColor: Colors.transparent,
+                                                                                                    onTap: () async {
+                                                                                                      logFirebaseEvent('CONSULT_PAGE_Container_hvf6zymm_ON_TAP');
+                                                                                                      if (matchingTemplatesItem.iNote != null) {
+                                                                                                        if (valueOrDefault<bool>(currentUserDocument?.activeMembership, false) != true) {
+                                                                                                          logFirebaseEvent('Container_bottom_sheet');
+                                                                                                          await showModalBottomSheet(
+                                                                                                            isScrollControlled: true,
+                                                                                                            backgroundColor: Colors.transparent,
+                                                                                                            enableDrag: false,
+                                                                                                            context: context,
+                                                                                                            builder: (context) {
+                                                                                                              return WebViewAware(
+                                                                                                                child: GestureDetector(
+                                                                                                                  onTap: () {
+                                                                                                                    FocusScope.of(context).unfocus();
+                                                                                                                    FocusManager.instance.primaryFocus?.unfocus();
                                                                                                                   },
-                                                                                                                  value: containerResourcesRecord.upvoted.contains(currentUserReference),
-                                                                                                                  onIcon: Icon(
-                                                                                                                    Icons.favorite,
-                                                                                                                    color: FlutterFlowTheme.of(context).primary,
-                                                                                                                    size: 25.0,
-                                                                                                                  ),
-                                                                                                                  offIcon: Icon(
-                                                                                                                    Icons.favorite_border,
-                                                                                                                    color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                                    size: 25.0,
+                                                                                                                  child: Padding(
+                                                                                                                    padding: MediaQuery.viewInsetsOf(context),
+                                                                                                                    child: B96BottomSheetSubscribeWidget(),
                                                                                                                   ),
                                                                                                                 ),
-                                                                                                                Text(
-                                                                                                                  containerResourcesRecord.popularity.toString(),
-                                                                                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                        fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                                                        letterSpacing: 0.0,
-                                                                                                                        useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
-                                                                                                                      ),
-                                                                                                                ),
-                                                                                                                SizedBox(
-                                                                                                                  height: 100.0,
-                                                                                                                  child: VerticalDivider(
-                                                                                                                    thickness: 1.0,
-                                                                                                                    color: FlutterFlowTheme.of(context).accent4,
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                              ],
-                                                                                                            ),
+                                                                                                              );
+                                                                                                            },
+                                                                                                          ).then((value) => safeSetState(() {}));
+                                                                                                        }
+                                                                                                      } else {
+                                                                                                        logFirebaseEvent('Container_update_app_state');
+                                                                                                        FFAppState().templateref = containerPresentingComplaintsRecord.reference;
+                                                                                                        safeSetState(() {});
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldPCTextController?.text = containerPresentingComplaintsRecord.pc;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldHxTextController?.text = containerPresentingComplaintsRecord.history;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldExTextController?.text = containerPresentingComplaintsRecord.exam;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldImTextController?.text = containerPresentingComplaintsRecord.impression;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldPlanTextController?.text = containerPresentingComplaintsRecord.plan;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldNotesTextController?.text = containerPresentingComplaintsRecord.notes;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldTextTextController?.text = containerPresentingComplaintsRecord.textMessage;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldSafetyNetSmallTextController?.text = containerPresentingComplaintsRecord.notes;
+                                                                                                        });
+                                                                                                        logFirebaseEvent('Container_set_form_field');
+                                                                                                        safeSetState(() {
+                                                                                                          _model.textFieldTextSmallTextController?.text = containerPresentingComplaintsRecord.textMessage;
+                                                                                                        });
+                                                                                                      }
+                                                                                                    },
+                                                                                                    child: Container(
+                                                                                                      width: double.infinity,
+                                                                                                      height: 40.0,
+                                                                                                      decoration: BoxDecoration(
+                                                                                                        color: Color(0x1F4741FF),
+                                                                                                        borderRadius: BorderRadius.circular(10.0),
+                                                                                                      ),
+                                                                                                      child: Column(
+                                                                                                        mainAxisSize: MainAxisSize.max,
+                                                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                        children: [
+                                                                                                          Icon(
+                                                                                                            Icons.lock_outlined,
+                                                                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                            size: 24.0,
                                                                                                           ),
-                                                                                                          Flexible(
-                                                                                                            child: CommunityResourceWidget(
-                                                                                                              key: Key('Keyi35_${resourcesMatchingIndex}_of_${resourcesMatching.length}'),
-                                                                                                              parameter1: containerResourcesRecord.description,
-                                                                                                              parameter2: containerResourcesRecord.link,
-                                                                                                              searchReference: _model.searchReference!,
-                                                                                                              resourceRef: containerResourcesRecord.reference,
-                                                                                                            ),
+                                                                                                          Text(
+                                                                                                            'ClickNote',
+                                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                  fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                                  letterSpacing: 0.0,
+                                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                                                                ),
                                                                                                           ),
                                                                                                         ],
                                                                                                       ),
                                                                                                     ),
-                                                                                                  ],
-                                                                                                ),
+                                                                                                  ).animateOnPageLoad(animationsMap['containerOnPageLoadAnimation']!);
+                                                                                                },
                                                                                               ),
-                                                                                            ],
+                                                                                            ),
                                                                                           ),
-                                                                                        );
-                                                                                      },
-                                                                                    ),
-                                                                                  );
-                                                                                },
-                                                                              );
-                                                                            },
+                                                                                      ],
+                                                                                    );
+                                                                                  },
+                                                                                );
+                                                                              },
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                    if (FFAppState()
-                                                                            .searchTerm ==
-                                                                        false)
-                                                                      wrapWithModel(
-                                                                        model: _model
-                                                                            .placeholderCommunityResourcesModel,
-                                                                        updateCallback:
-                                                                            () =>
-                                                                                safeSetState(() {}),
+                                                                    ),
+                                                                    Flexible(
+                                                                      child:
+                                                                          Container(
+                                                                        decoration:
+                                                                            BoxDecoration(),
                                                                         child:
-                                                                            PlaceholderCommunityResourcesWidget(),
+                                                                            Visibility(
+                                                                          visible:
+                                                                              (FFAppState().templateref != null) && (_model.textFieldSearchTextController.text != ''),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.all(10.0),
+                                                                            child:
+                                                                                SingleChildScrollView(
+                                                                              child: Column(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  if (_model.textFieldSafetyNetSmallTextController.text != '')
+                                                                                    Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 10.0),
+                                                                                      child: InkWell(
+                                                                                        splashColor: Colors.transparent,
+                                                                                        focusColor: Colors.transparent,
+                                                                                        hoverColor: Colors.transparent,
+                                                                                        highlightColor: Colors.transparent,
+                                                                                        onTap: () async {
+                                                                                          logFirebaseEvent('CONSULT_PAGE_Row_tzxp5s51_ON_TAP');
+                                                                                          logFirebaseEvent('Row_copy_to_clipboard');
+                                                                                          await Clipboard.setData(ClipboardData(text: _model.textFieldSafetyNetSmallTextController.text));
+                                                                                          logFirebaseEvent('Row_show_snack_bar');
+                                                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                                                            SnackBar(
+                                                                                              content: Text(
+                                                                                                'Text copied!',
+                                                                                                style: TextStyle(
+                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                ),
+                                                                                              ),
+                                                                                              duration: Duration(milliseconds: 4000),
+                                                                                              backgroundColor: FlutterFlowTheme.of(context).secondary,
+                                                                                            ),
+                                                                                          );
+                                                                                        },
+                                                                                        child: Row(
+                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                                          children: [
+                                                                                            Padding(
+                                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
+                                                                                              child: Icon(
+                                                                                                Icons.content_copy,
+                                                                                                color: Color(0x5C000000),
+                                                                                                size: 20.0,
+                                                                                              ),
+                                                                                            ),
+                                                                                            Text(
+                                                                                              'Copy ',
+                                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                    fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                                    color: Color(0x5C000000),
+                                                                                                    fontSize: 14.0,
+                                                                                                    letterSpacing: 0.0,
+                                                                                                    useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                                                  ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  if (_model.textFieldSafetyNetSmallTextController.text != '')
+                                                                                    Align(
+                                                                                      alignment: AlignmentDirectional(0.0, -0.66),
+                                                                                      child: TextFormField(
+                                                                                        controller: _model.textFieldSafetyNetSmallTextController,
+                                                                                        focusNode: _model.textFieldSafetyNetSmallFocusNode,
+                                                                                        autofocus: true,
+                                                                                        obscureText: false,
+                                                                                        decoration: InputDecoration(
+                                                                                          labelText: 'Safety-netting',
+                                                                                          labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                                fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                                                                                                color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                fontSize: 22.0,
+                                                                                                letterSpacing: 0.0,
+                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
+                                                                                              ),
+                                                                                          hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                                fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                                                                                                letterSpacing: 0.0,
+                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
+                                                                                              ),
+                                                                                          enabledBorder: OutlineInputBorder(
+                                                                                            borderSide: BorderSide(
+                                                                                              color: FlutterFlowTheme.of(context).alternate,
+                                                                                              width: 2.0,
+                                                                                            ),
+                                                                                            borderRadius: BorderRadius.circular(8.0),
+                                                                                          ),
+                                                                                          focusedBorder: OutlineInputBorder(
+                                                                                            borderSide: BorderSide(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              width: 2.0,
+                                                                                            ),
+                                                                                            borderRadius: BorderRadius.circular(8.0),
+                                                                                          ),
+                                                                                          errorBorder: OutlineInputBorder(
+                                                                                            borderSide: BorderSide(
+                                                                                              color: FlutterFlowTheme.of(context).error,
+                                                                                              width: 2.0,
+                                                                                            ),
+                                                                                            borderRadius: BorderRadius.circular(8.0),
+                                                                                          ),
+                                                                                          focusedErrorBorder: OutlineInputBorder(
+                                                                                            borderSide: BorderSide(
+                                                                                              color: FlutterFlowTheme.of(context).error,
+                                                                                              width: 2.0,
+                                                                                            ),
+                                                                                            borderRadius: BorderRadius.circular(8.0),
+                                                                                          ),
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                              letterSpacing: 0.0,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                                              lineHeight: 1.5,
+                                                                                            ),
+                                                                                        maxLines: null,
+                                                                                        validator: _model.textFieldSafetyNetSmallTextControllerValidator.asValidator(context),
+                                                                                      ),
+                                                                                    ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 10.0),
+                                                                                    child: InkWell(
+                                                                                      splashColor: Colors.transparent,
+                                                                                      focusColor: Colors.transparent,
+                                                                                      hoverColor: Colors.transparent,
+                                                                                      highlightColor: Colors.transparent,
+                                                                                      onTap: () async {
+                                                                                        logFirebaseEvent('CONSULT_PAGE_Row_efeulomj_ON_TAP');
+                                                                                        logFirebaseEvent('Row_copy_to_clipboard');
+                                                                                        await Clipboard.setData(ClipboardData(text: _model.textFieldTextSmallTextController.text));
+                                                                                        logFirebaseEvent('Row_show_snack_bar');
+                                                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                                                          SnackBar(
+                                                                                            content: Text(
+                                                                                              'Text copied!',
+                                                                                              style: TextStyle(
+                                                                                                color: FlutterFlowTheme.of(context).primaryText,
+                                                                                              ),
+                                                                                            ),
+                                                                                            duration: Duration(milliseconds: 4000),
+                                                                                            backgroundColor: FlutterFlowTheme.of(context).secondary,
+                                                                                          ),
+                                                                                        );
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                                        children: [
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
+                                                                                            child: Icon(
+                                                                                              Icons.content_copy,
+                                                                                              color: Color(0x5C000000),
+                                                                                              size: 20.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                          Text(
+                                                                                            'Copy ',
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                                  color: Color(0x5C000000),
+                                                                                                  fontSize: 14.0,
+                                                                                                  letterSpacing: 0.0,
+                                                                                                  useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                                                ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Align(
+                                                                                    alignment: AlignmentDirectional(0.0, -0.66),
+                                                                                    child: TextFormField(
+                                                                                      controller: _model.textFieldTextSmallTextController,
+                                                                                      focusNode: _model.textFieldTextSmallFocusNode,
+                                                                                      autofocus: true,
+                                                                                      obscureText: false,
+                                                                                      decoration: InputDecoration(
+                                                                                        labelText: 'Text message',
+                                                                                        labelStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                              fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                                                                                              color: FlutterFlowTheme.of(context).primaryText,
+                                                                                              fontSize: 22.0,
+                                                                                              letterSpacing: 0.0,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
+                                                                                            ),
+                                                                                        hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                              fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                                                                                              letterSpacing: 0.0,
+                                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
+                                                                                            ),
+                                                                                        enabledBorder: OutlineInputBorder(
+                                                                                          borderSide: BorderSide(
+                                                                                            color: FlutterFlowTheme.of(context).alternate,
+                                                                                            width: 2.0,
+                                                                                          ),
+                                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                                        ),
+                                                                                        focusedBorder: OutlineInputBorder(
+                                                                                          borderSide: BorderSide(
+                                                                                            color: FlutterFlowTheme.of(context).primary,
+                                                                                            width: 2.0,
+                                                                                          ),
+                                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                                        ),
+                                                                                        errorBorder: OutlineInputBorder(
+                                                                                          borderSide: BorderSide(
+                                                                                            color: FlutterFlowTheme.of(context).error,
+                                                                                            width: 2.0,
+                                                                                          ),
+                                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                                        ),
+                                                                                        focusedErrorBorder: OutlineInputBorder(
+                                                                                          borderSide: BorderSide(
+                                                                                            color: FlutterFlowTheme.of(context).error,
+                                                                                            width: 2.0,
+                                                                                          ),
+                                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                                        ),
+                                                                                      ),
+                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                                            letterSpacing: 0.0,
+                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                                            lineHeight: 1.5,
+                                                                                          ),
+                                                                                      maxLines: null,
+                                                                                      validator: _model.textFieldTextSmallTextControllerValidator.asValidator(context),
+                                                                                    ),
+                                                                                  ),
+                                                                                  if ((currentUserEmail == 'jamesjwalker01@gmail.com') || (currentUserEmail == 'therealcatmimi@gmail.com') || (currentUserEmail == 'roseshendi@gmail.com'))
+                                                                                    Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 55.0, 0.0, 0.0),
+                                                                                      child: FFButtonWidget(
+                                                                                        onPressed: () async {
+                                                                                          logFirebaseEvent('CONSULT_PAGE_UPDATE_BTN_ON_TAP');
+                                                                                          logFirebaseEvent('Button_backend_call');
+
+                                                                                          await FFAppState().templateref!.update(createPresentingComplaintsRecordData(
+                                                                                                notes: _model.textFieldSafetyNetSmallTextController.text,
+                                                                                                textMessage: _model.textFieldTextSmallTextController.text,
+                                                                                              ));
+                                                                                        },
+                                                                                        text: 'Update',
+                                                                                        options: FFButtonOptions(
+                                                                                          height: 28.16,
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                                                                          iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                          textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
+                                                                                                color: Colors.white,
+                                                                                                letterSpacing: 0.0,
+                                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleSmallFamily),
+                                                                                              ),
+                                                                                          elevation: 3.0,
+                                                                                          borderSide: BorderSide(
+                                                                                            color: Colors.transparent,
+                                                                                            width: 1.0,
+                                                                                          ),
+                                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                ],
+                                                                              ),
+                                                                            ).animateOnActionTrigger(
+                                                                              animationsMap['columnOnActionTriggerAnimation']!,
+                                                                            ),
+                                                                          ),
+                                                                        ),
                                                                       ),
+                                                                    ),
                                                                   ],
                                                                 ),
                                                               ),
-                                                            ],
-                                                          ),
-                                                          onEnter:
-                                                              ((event) async {
-                                                            safeSetState(() =>
-                                                                _model.mouseRegionCommunityHovered =
-                                                                    true);
-                                                          }),
-                                                          onExit:
-                                                              ((event) async {
-                                                            safeSetState(() =>
-                                                                _model.mouseRegionCommunityHovered =
-                                                                    false);
-                                                          }),
+                                                              onEnter:
+                                                                  ((event) async {
+                                                                safeSetState(() =>
+                                                                    _model.mouseRegionTemplatesHovered =
+                                                                        true);
+                                                              }),
+                                                              onExit:
+                                                                  ((event) async {
+                                                                safeSetState(() =>
+                                                                    _model.mouseRegionTemplatesHovered =
+                                                                        false);
+                                                              }),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                     ],
@@ -6045,7 +5329,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                       .override(
                                                                         fontFamily:
                                                                             FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                        color: _model.mouseRegionHovered7 ==
+                                                                        color: _model.mouseRegionHovered6 ==
                                                                                 true
                                                                             ? FlutterFlowTheme.of(context).hover
                                                                             : FlutterFlowTheme.of(context).accent3,
@@ -6087,7 +5371,9 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                         .doc()
                                                                         .set(
                                                                             createPresentingComplaintsRecordData(
-                                                                          pc: 'New',
+                                                                          pc: 'ZZNew',
+                                                                          owner:
+                                                                              currentUserReference,
                                                                         ));
                                                                   },
                                                                 ),
@@ -6133,7 +5419,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                       border:
                                                                           Border
                                                                               .all(
-                                                                        color: _model.mouseRegionHovered7 ==
+                                                                        color: _model.mouseRegionHovered6 ==
                                                                                 true
                                                                             ? FlutterFlowTheme.of(context).hover
                                                                             : FlutterFlowTheme.of(context).accent3,
@@ -6187,7 +5473,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                                 final listViewPresentingComplaintsRecord = listViewPresentingComplaintsRecordList[listViewIndex];
                                                                                 return Stack(
                                                                                   children: [
-                                                                                    if ((listViewPresentingComplaintsRecord.owner == null) || (listViewPresentingComplaintsRecord.owner == currentUserReference))
+                                                                                    if ((listViewPresentingComplaintsRecord.owner == null) || (listViewPresentingComplaintsRecord.owner == currentUserReference) || (listViewPresentingComplaintsRecord.owner?.id == '0w0BR7jueRep4nH4D0vt9oY1JAX2'))
                                                                                       Padding(
                                                                                         padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 5.0),
                                                                                         child: InkWell(
@@ -6393,13 +5679,13 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                             onEnter:
                                                                 ((event) async {
                                                               safeSetState(() =>
-                                                                  _model.mouseRegionHovered7 =
+                                                                  _model.mouseRegionHovered6 =
                                                                       true);
                                                             }),
                                                             onExit:
                                                                 ((event) async {
                                                               safeSetState(() =>
-                                                                  _model.mouseRegionHovered7 =
+                                                                  _model.mouseRegionHovered6 =
                                                                       false);
                                                             }),
                                                           ),
@@ -6761,7 +6047,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                     fontFamily:
                                                                         FlutterFlowTheme.of(context)
                                                                             .bodyMediumFamily,
-                                                                    color: _model.mouseRegionHovered8 ==
+                                                                    color: _model.mouseRegionHovered7 ==
                                                                             true
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
@@ -6810,7 +6096,7 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                               10.0),
                                                                   border: Border
                                                                       .all(
-                                                                    color: _model.mouseRegionHovered8 ==
+                                                                    color: _model.mouseRegionHovered7 ==
                                                                             true
                                                                         ? FlutterFlowTheme.of(context)
                                                                             .hover
@@ -7138,13 +6424,13 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                             onEnter:
                                                                 ((event) async {
                                                               safeSetState(() =>
-                                                                  _model.mouseRegionHovered8 =
+                                                                  _model.mouseRegionHovered7 =
                                                                       true);
                                                             }),
                                                             onExit:
                                                                 ((event) async {
                                                               safeSetState(() =>
-                                                                  _model.mouseRegionHovered8 =
+                                                                  _model.mouseRegionHovered7 =
                                                                       false);
                                                             }),
                                                           ),
@@ -8128,6 +7414,36 @@ class _ConsultWidgetState extends State<ConsultWidget>
                                                                                               ),
                                                                                               borderRadius: BorderRadius.circular(8.0),
                                                                                             ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      if ((currentUserEmail == 'jamesjwalker01@gmail.com') || (currentUserEmail == 'therealcatmimi@gmail.com') || (currentUserEmail == 'roseshendi@gmail.com'))
+                                                                                        Transform.scale(
+                                                                                          scaleX: 0.7,
+                                                                                          scaleY: 0.7,
+                                                                                          child: Switch.adaptive(
+                                                                                            value: _model.switchValue ??= columnPresentingComplaintsRecord.isSafetyNet,
+                                                                                            onChanged: (newValue) async {
+                                                                                              safeSetState(() => _model.switchValue = newValue);
+                                                                                              if (newValue) {
+                                                                                                logFirebaseEvent('CONSULT_Switch_gbwj8o5u_ON_TOGGLE_ON');
+                                                                                                logFirebaseEvent('Switch_backend_call');
+
+                                                                                                await FFAppState().templateref!.update(createPresentingComplaintsRecordData(
+                                                                                                      isSafetyNet: true,
+                                                                                                    ));
+                                                                                              } else {
+                                                                                                logFirebaseEvent('CONSULT_Switch_gbwj8o5u_ON_TOGGLE_OFF');
+                                                                                                logFirebaseEvent('Switch_backend_call');
+
+                                                                                                await FFAppState().templateref!.update(createPresentingComplaintsRecordData(
+                                                                                                      isSafetyNet: false,
+                                                                                                    ));
+                                                                                              }
+                                                                                            },
+                                                                                            activeColor: FlutterFlowTheme.of(context).primary,
+                                                                                            activeTrackColor: FlutterFlowTheme.of(context).primary,
+                                                                                            inactiveTrackColor: FlutterFlowTheme.of(context).alternate,
+                                                                                            inactiveThumbColor: FlutterFlowTheme.of(context).secondaryBackground,
                                                                                           ),
                                                                                         ),
                                                                                       if ((currentUserEmail == 'jamesjwalker01@gmail.com') || (currentUserEmail == 'therealcatmimi@gmail.com') || (currentUserEmail == 'roseshendi@gmail.com'))

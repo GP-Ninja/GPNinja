@@ -2,7 +2,6 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/consult/placeholder_community_resources/placeholder_community_resources_widget.dart';
 import '/consult/placeholder_key_resources/placeholder_key_resources_widget.dart';
-import '/consult/placeholder_static_template/placeholder_static_template_widget.dart';
 import '/flutter_flow/flutter_flow_timer.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/general/horizontal_navbar/horizontal_navbar_widget.dart';
@@ -37,6 +36,8 @@ class ConsultModel extends FlutterFlowModel<ConsultWidget> {
   bool resourceType = true;
 
   bool feedbackVisible = false;
+
+  String? templateSelected;
 
   ///  State fields for stateful widgets in this page.
 
@@ -117,14 +118,14 @@ class ConsultModel extends FlutterFlowModel<ConsultWidget> {
   bool mouseRegionMIMSHovered = false;
   // Stores action output result for [Backend Call - Create Document] action in Container widget.
   SearchResultsRecord? resultClickedMIMS;
-  // State field(s) for MouseRegion widget.
-  bool mouseRegionHovered5 = false;
+  // State field(s) for MouseRegionCalcs widget.
+  bool mouseRegionCalcsHovered = false;
   // State field(s) for MouseRegionMDCALC widget.
   bool mouseRegionMDCALCHovered = false;
   // State field(s) for MouseRegionMDCALCOptions widget.
   bool mouseRegionMDCALCOptionsHovered = false;
   // State field(s) for MouseRegion widget.
-  bool mouseRegionHovered6 = false;
+  bool mouseRegionHovered5 = false;
   // State field(s) for MouseRegionPatient widget.
   bool mouseRegionPatientHovered = false;
   // Stores action output result for [Backend Call - Create Document] action in Container widget.
@@ -139,59 +140,30 @@ class ConsultModel extends FlutterFlowModel<ConsultWidget> {
   bool? switchCKSValue;
   // Model for placeholder_key_resources component.
   late PlaceholderKeyResourcesModel placeholderKeyResourcesModel;
+  // State field(s) for MouseRegionUserUploadedResources widget.
+  bool mouseRegionUserUploadedResourcesHovered = false;
+  // Model for placeholder_community_resources component.
+  late PlaceholderCommunityResourcesModel placeholderCommunityResourcesModel;
   // State field(s) for MouseRegionTemplatesHeader widget.
   bool mouseRegionTemplatesHeaderHovered = false;
   // State field(s) for MouseRegionTemplates widget.
   bool mouseRegionTemplatesHovered = false;
-  // State field(s) for MouseRegionSelectedTemplate widget.
-  bool mouseRegionSelectedTemplateHovered = false;
-  // State field(s) for TextFieldPCSmall widget.
-  FocusNode? textFieldPCSmallFocusNode;
-  TextEditingController? textFieldPCSmallTextController;
+  // State field(s) for TextFieldSafetyNetSmall widget.
+  FocusNode? textFieldSafetyNetSmallFocusNode;
+  TextEditingController? textFieldSafetyNetSmallTextController;
   String? Function(BuildContext, String?)?
-      textFieldPCSmallTextControllerValidator;
-  // State field(s) for TextFieldPlanSmall widget.
-  FocusNode? textFieldPlanSmallFocusNode;
-  TextEditingController? textFieldPlanSmallTextController;
-  String? Function(BuildContext, String?)?
-      textFieldPlanSmallTextControllerValidator;
-  // State field(s) for TextFieldNotesSmall widget.
-  FocusNode? textFieldNotesSmallFocusNode;
-  TextEditingController? textFieldNotesSmallTextController;
-  String? Function(BuildContext, String?)?
-      textFieldNotesSmallTextControllerValidator;
+      textFieldSafetyNetSmallTextControllerValidator;
   // State field(s) for TextFieldTextSmall widget.
   FocusNode? textFieldTextSmallFocusNode;
   TextEditingController? textFieldTextSmallTextController;
   String? Function(BuildContext, String?)?
       textFieldTextSmallTextControllerValidator;
-  // State field(s) for TextFieldHxSmall widget.
-  FocusNode? textFieldHxSmallFocusNode;
-  TextEditingController? textFieldHxSmallTextController;
-  String? Function(BuildContext, String?)?
-      textFieldHxSmallTextControllerValidator;
-  // State field(s) for TextFieldExSmall widget.
-  FocusNode? textFieldExSmallFocusNode;
-  TextEditingController? textFieldExSmallTextController;
-  String? Function(BuildContext, String?)?
-      textFieldExSmallTextControllerValidator;
-  // State field(s) for TextFieldImSmall widget.
-  FocusNode? textFieldImSmallFocusNode;
-  TextEditingController? textFieldImSmallTextController;
-  String? Function(BuildContext, String?)?
-      textFieldImSmallTextControllerValidator;
-  // Model for placeholder_static_template component.
-  late PlaceholderStaticTemplateModel placeholderStaticTemplateModel;
-  // State field(s) for MouseRegionCommunity widget.
-  bool mouseRegionCommunityHovered = false;
-  // Model for placeholder_community_resources component.
-  late PlaceholderCommunityResourcesModel placeholderCommunityResourcesModel;
   // State field(s) for MouseRegion widget.
-  bool mouseRegionHovered7 = false;
+  bool mouseRegionHovered6 = false;
   // State field(s) for MouseRegionMy widget.
   bool mouseRegionMyHovered = false;
   // State field(s) for MouseRegion widget.
-  bool mouseRegionHovered8 = false;
+  bool mouseRegionHovered7 = false;
   // State field(s) for TextFieldPC widget.
   FocusNode? textFieldPCFocusNode;
   TextEditingController? textFieldPCTextController;
@@ -221,6 +193,8 @@ class ConsultModel extends FlutterFlowModel<ConsultWidget> {
   FocusNode? textFieldTextFocusNode;
   TextEditingController? textFieldTextTextController;
   String? Function(BuildContext, String?)? textFieldTextTextControllerValidator;
+  // State field(s) for Switch widget.
+  bool? switchValue;
   // Model for horizontal_navbar component.
   late HorizontalNavbarModel horizontalNavbarModel;
 
@@ -228,8 +202,6 @@ class ConsultModel extends FlutterFlowModel<ConsultWidget> {
   void initState(BuildContext context) {
     placeholderKeyResourcesModel =
         createModel(context, () => PlaceholderKeyResourcesModel());
-    placeholderStaticTemplateModel =
-        createModel(context, () => PlaceholderStaticTemplateModel());
     placeholderCommunityResourcesModel =
         createModel(context, () => PlaceholderCommunityResourcesModel());
     horizontalNavbarModel = createModel(context, () => HorizontalNavbarModel());
@@ -243,29 +215,13 @@ class ConsultModel extends FlutterFlowModel<ConsultWidget> {
     timer2Controller.dispose();
     timer1Controller.dispose();
     placeholderKeyResourcesModel.dispose();
-    textFieldPCSmallFocusNode?.dispose();
-    textFieldPCSmallTextController?.dispose();
-
-    textFieldPlanSmallFocusNode?.dispose();
-    textFieldPlanSmallTextController?.dispose();
-
-    textFieldNotesSmallFocusNode?.dispose();
-    textFieldNotesSmallTextController?.dispose();
+    placeholderCommunityResourcesModel.dispose();
+    textFieldSafetyNetSmallFocusNode?.dispose();
+    textFieldSafetyNetSmallTextController?.dispose();
 
     textFieldTextSmallFocusNode?.dispose();
     textFieldTextSmallTextController?.dispose();
 
-    textFieldHxSmallFocusNode?.dispose();
-    textFieldHxSmallTextController?.dispose();
-
-    textFieldExSmallFocusNode?.dispose();
-    textFieldExSmallTextController?.dispose();
-
-    textFieldImSmallFocusNode?.dispose();
-    textFieldImSmallTextController?.dispose();
-
-    placeholderStaticTemplateModel.dispose();
-    placeholderCommunityResourcesModel.dispose();
     textFieldPCFocusNode?.dispose();
     textFieldPCTextController?.dispose();
 

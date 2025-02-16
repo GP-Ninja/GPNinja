@@ -63,7 +63,7 @@ class _CommunityResourceWidgetState extends State<CommunityResourceWidget> {
         children: [
           Container(
             width: MediaQuery.sizeOf(context).width * 0.2,
-            height: 100.0,
+            height: 80.0,
             decoration: BoxDecoration(),
             child: Align(
               alignment: AlignmentDirectional(0.0, 0.0),
@@ -128,6 +128,7 @@ class _CommunityResourceWidgetState extends State<CommunityResourceWidget> {
                           child: Text(
                             widget.parameter1!,
                             textAlign: TextAlign.start,
+                            maxLines: 2,
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
@@ -294,7 +295,7 @@ class _CommunityResourceWidgetState extends State<CommunityResourceWidget> {
                       triggerMode: TooltipTriggerMode.tap,
                       child: Padding(
                         padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 45.0, 5.0, 0.0),
+                            EdgeInsetsDirectional.fromSTEB(0.0, 25.0, 5.0, 0.0),
                         child: InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
